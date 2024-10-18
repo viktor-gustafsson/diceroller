@@ -21,13 +21,13 @@ public class RollDiceCommand
             command = command[..^modifierMatch.Value.Length];
         }
 
-        var parts = command[6..].ToLower().Split('d', 'k', 'h', 'l');
+        var parts = command.ToLower().Split('d', 'k', 'h', 'l');
         
         DiceCount = int.Parse(parts[0]);
         DiceType = int.Parse(parts[1]);
         DicesToKeep = parts.Length > 2 ? int.Parse(parts[2]) : DiceCount;
         Modifier = modifier;
-        Command = command.Split("!roll ")[1];
+        Command = command;
         
         if (parts.Length < 2) 
             ValidCommand = false;

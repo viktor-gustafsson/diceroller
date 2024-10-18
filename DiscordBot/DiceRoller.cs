@@ -1,44 +1,57 @@
 using Discord;
+using Discord.Net;
 using Discord.WebSocket;
 
 namespace DiscordBot;
 
-public class DiceRoller
+public class DiceRoller(string token)
 {
-    private readonly string _token;
-
+    private const string OptionName = "dice";
     private readonly DiscordSocketClient _client = new(new DiscordSocketConfig
     {
         GatewayIntents = GatewayIntents.AllUnprivileged | GatewayIntents.MessageContent
     });
 
-    public DiceRoller(string token)
-    {
-        _token = token;
-        _client.MessageReceived += MessageHandler;
-    }
-    
     public async Task StartBot()
     {
         await _client.StartAsync();
-        await _client.LoginAsync(TokenType.Bot, _token);
+        await _client.LoginAsync(TokenType.Bot, token);
+        _client.Ready += ReadyAsync;
+        _client.SlashCommandExecuted += MessageHandler;
 
         await Task.Delay(-1);
     }
-
-    private static async Task MessageHandler(SocketMessage message)
+    
+    private async Task ReadyAsync()
     {
-        if (message.Author.IsBot)
-            return;
+        // Define the slash command builder
+        var rollCommand = new SlashCommandBuilder()
+            .WithName("roll")
+            .WithDescription("Roll some dice!")
+            .AddOption(OptionName, ApplicationCommandOptionType.String, "e.g. 2d20k1+5", isRequired: true);
 
-        if (message.Content.StartsWith("!roll"))
+        try
         {
-            var response = ParseAndRollDice(message.Content);
-            await Reply(message, response);
+            await _client.CreateGlobalApplicationCommandAsync(rollCommand.Build());
+        }
+        catch (HttpException ex)
+        {
+            var json = Newtonsoft.Json.JsonConvert.SerializeObject(ex.Errors, Newtonsoft.Json.Formatting.Indented);
+            Console.WriteLine(json);
+        }
+    }
+
+    private static async Task MessageHandler(SocketSlashCommand command)
+    {
+        if (command.Data.Name == "roll")
+        {
+            var diceOption = command.Data.Options.FirstOrDefault(x => x.Name == OptionName)?.Value?.ToString();
+            var response = ParseAndRollDice(diceOption);
+            await command.RespondAsync(response);
         }
         else
         {
-            await Reply(message, "I'm sorry, I don't know what to do.");
+            await command.RespondAsync("I'm sorry, I don't know what to do.");
         }
     }
 
@@ -79,7 +92,7 @@ public class DiceRoller
         }
         catch (Exception)
         {
-            return "Invalid roll command. Please use a format like '!roll 2d20k1h+5' or '!roll 6d6k3l-3'.";
+            return "Invalid roll command. Please use a format like '2d20k1h+5' or '6d6k3l-3'.";
         }
     }
 

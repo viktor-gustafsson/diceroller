@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
 
@@ -74,7 +70,8 @@ public class DiceRoller
             var total = keptDice.Sum() + rollDiceCommand.Modifier;
 
             var modifierMessage = rollDiceCommand.Modifier == 0 ? "" : GetModifierMessage(rollDiceCommand);
-            var keptDiceMessage = rollDiceCommand.DiceCount == rollDiceCommand.DicesToKeep ? "" : GetKeepMessage(keptDice);
+            var keptDiceMessage =
+                rollDiceCommand.DiceCount == rollDiceCommand.DicesToKeep ? "" : GetKeepMessage(keptDice);
             
             var rollResult =
                 $"{GetRollingMessage(rollDiceCommand)}\n{GetDiceNumberToKeepMessage(rollDiceCommand, keepHigh)}{modifierMessage}\n{GetRollsMessage(rolls)}{keptDiceMessage}\n{GetSumMessage(keptDice, rollDiceCommand.Modifier, total)}";
@@ -90,8 +87,18 @@ public class DiceRoller
         => $"\nModifier: {rollDiceCommand.Modifier}";
 
     private static string GetSumMessage(IEnumerable<int> keptDice, int modifier, int total)
-        => $"Sum: {keptDice.Sum()}{(modifier != 0 ? $"{(modifier > 0 ? "+" : "")}{modifier}" : "")} = {total}";
-    
+    {
+        var sumOfKeptDice = keptDice.Sum();
+
+        var modifierMessage = modifier != 0 
+            ? $"{(modifier > 0 ? "+" : "")}{modifier}" 
+            : "";
+
+        return modifier != 0
+            ? $"Sum: {sumOfKeptDice}{modifierMessage} = {total}"
+            : $"Sum: {sumOfKeptDice}{modifierMessage}";
+    }
+
     private static string GetKeepMessage(IEnumerable<int> keptDice)
         => $"\nKeeping: {string.Join(", ", keptDice)}";
 

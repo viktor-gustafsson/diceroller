@@ -127,7 +127,4 @@ public class DiceRoller(string token)
 
     private static string GetRollingMessage(RollDiceCommand rollDiceCommand)
         => $"Rolling {rollDiceCommand.DiceCount} d{rollDiceCommand.DiceType}";
-
-    private static async Task Reply(SocketMessage message, string response) =>
-        await message.Channel.SendMessageAsync(response);
 }

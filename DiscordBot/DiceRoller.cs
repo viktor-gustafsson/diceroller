@@ -43,10 +43,11 @@ public class DiceRoller(string token)
 
     private static async Task MessageHandler(SocketSlashCommand command)
     {
+        var userGlobalName = (command.User as SocketGuildUser).DisplayName;
         if (command.Data.Name == "roll")
         {
             var diceOption = command.Data.Options.FirstOrDefault(x => x.Name == OptionName)?.Value?.ToString();
-            var response = ParseAndRollDice(diceOption);
+            var response = ParseAndRollDice(userGlobalName,diceOption);
             await command.RespondAsync(response);
         }
         else
@@ -55,7 +56,7 @@ public class DiceRoller(string token)
         }
     }
 
-    private static string ParseAndRollDice(string command)
+    private static string ParseAndRollDice(string userDisplayName, string command)
     {
         try
         {
@@ -87,7 +88,7 @@ public class DiceRoller(string token)
                 rollDiceCommand.DiceCount == rollDiceCommand.DicesToKeep ? "" : GetKeepMessage(keptDice);
             
             var rollResult =
-                $"{GetRollingMessage(rollDiceCommand)}\n{GetDiceNumberToKeepMessage(rollDiceCommand, keepHigh)}{modifierMessage}\n{GetRollsMessage(rolls)}{keptDiceMessage}\n{GetSumMessage(keptDice, rollDiceCommand.Modifier, total)}";
+                $"{userDisplayName} {GetRollingMessage(rollDiceCommand)}\n{GetDiceNumberToKeepMessage(rollDiceCommand, keepHigh)}{modifierMessage}\n{GetRollsMessage(rolls)}{keptDiceMessage}\n{GetSumMessage(keptDice, rollDiceCommand.Modifier, total)}";
             return rollResult;
         }
         catch (Exception)

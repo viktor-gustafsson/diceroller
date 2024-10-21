@@ -147,7 +147,7 @@ public class DiceRoller(string token)
         " \n" +
         "### Basic Command: `/roll [number_of_dice]d[number_of_sides]`\n" +
         " - **number_of_dice**: The number of dice to roll.\n" +
-        " - **number_of_sides**: The number of sides on each dice (e.g., `d6`, `d20`).\n" +
+        " - **number_of_sides**: The number of sides on each dice (e.g., `d4`, `d6`, `d8`, `d10`, `d12`, `d20`, `d100`).\n" +
         "### Optional Extras:\n" +
         " - **k[number_to_keep]**: Keep only the highest or lowest dice.\n" +
         "   - Add `h` to keep the highest (default).\n" +

@@ -55,12 +55,15 @@ public class DiceRoller(string token)
             case "roll":
             {
                 var diceOption = command.Data.Options.FirstOrDefault(x => x.Name == DiceOptionName)?.Value?.ToString();
+                await command.DeferAsync();
                 var response = ParseAndRollDice(userGlobalName,diceOption);
-                await command.RespondAsync(response);
+                await command.FollowupAsync(response);
                 break;
             }
             case "help":
-                await command.RespondAsync(GetHelpMessage(), ephemeral: true);
+                await command.DeferAsync();
+                var helpMessage = GetHelpMessage();
+                await command.FollowupAsync(helpMessage, ephemeral: true);
                 break;
             default:
                 await command.RespondAsync("I'm sorry, I don't know what to do.");

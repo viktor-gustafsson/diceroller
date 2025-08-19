@@ -9,6 +9,7 @@ public class DiceRoller(string token)
     private const string DiceOptionName = "dice";
     private const string HelpOptionName = "help";
     private const string RollOptionName = "roll";
+
     private readonly DiscordSocketClient _client = new(new DiscordSocketConfig
     {
         GatewayIntents = GatewayIntents.AllUnprivileged | GatewayIntents.MessageContent
@@ -23,14 +24,15 @@ public class DiceRoller(string token)
 
         await Task.Delay(-1);
     }
-    
+
     private async Task ReadyAsync()
     {
         // Define the slash command builder
         var rollCommand = new SlashCommandBuilder()
             .WithName(RollOptionName)
             .WithDescription("Roll some dice!")
-            .AddOption(DiceOptionName, ApplicationCommandOptionType.String, "[# of dice]d[dice type]k[keep amount][h/l][modifier] e.g. 2d20k1h+5", isRequired: true);
+            .AddOption(DiceOptionName, ApplicationCommandOptionType.String,
+                "[# of dice]d[dice type]k[keep amount][h/l][modifier] e.g. 2d20k1h+5", isRequired: true);
 
         var helpCommand = new SlashCommandBuilder()
             .WithName(HelpOptionName)
@@ -53,21 +55,21 @@ public class DiceRoller(string token)
         var userGlobalName = (command.User as SocketGuildUser).DisplayName;
         switch (command.Data.Name)
         {
-            case "roll":
+            case RollOptionName:
             {
                 var diceOption = command.Data.Options.FirstOrDefault(x => x.Name == DiceOptionName)?.Value?.ToString();
                 await command.DeferAsync();
-                var response = ParseAndRollDice(userGlobalName,diceOption);
+                var response = ParseAndRollDice(userGlobalName, diceOption);
                 await command.FollowupAsync(response);
                 break;
             }
-            case "help":
+            case HelpOptionName:
                 await command.DeferAsync();
-                var helpMessage = GetHelpMessage();
+                var helpMessage = Messages.GetHelpMessage();
                 await command.FollowupAsync(helpMessage, ephemeral: true);
                 break;
             default:
-                await command.RespondAsync("I'm sorry, I don't know what to do.");
+                await command.RespondAsync(ErrorMessages.GetFallbackErrorMessage());
                 break;
         }
     }
@@ -81,8 +83,8 @@ public class DiceRoller(string token)
             var rollDiceCommands = RollDiceCommandFactory.GetRollDiceCommands(command);
             foreach (var rollDiceCommand in rollDiceCommands)
             {
-                if (rollDiceCommand.ValidCommand) 
-                    return "Invalid roll command.";
+                if (rollDiceCommand.ValidCommand)
+                    return ErrorMessages.GetInvalidRollCommandMessage();
 
                 // By default, keep highest dice if no 'h' or 'l' is provided
                 var keepHigh = !rollDiceCommand.Command.Contains('l');
@@ -103,74 +105,14 @@ public class DiceRoller(string token)
                 // Apply the modifier to the total of the kept dice
                 var total = keptDice.Sum() + rollDiceCommand.Modifier;
 
-                var modifierMessage = rollDiceCommand.Modifier == 0 ? "" : GetModifierMessage(rollDiceCommand);
-                var keptDiceMessage =
-                    rollDiceCommand.DiceCount == rollDiceCommand.DicesToKeep ? "" : GetKeepMessage(keptDice);
-            
-                result +=
-                    $"```" +
-                    $"\n{userDisplayName} \n{GetRollingMessage(rollDiceCommand)}\n{GetDiceNumberToKeepMessage(rollDiceCommand, keepHigh)}{modifierMessage}\n{GetRollsMessage(rolls)}{keptDiceMessage}\n{GetSumMessage(keptDice, rollDiceCommand.Modifier, total)}" +
-                    $"```";
+                result += Messages.GetResultMessage(userDisplayName, rollDiceCommand, keepHigh, rolls, keptDice, total);
             }
+
             return result;
         }
         catch (Exception)
         {
-            return "Invalid roll command. Please reference /help for examples and guidance.";
+            return ErrorMessages.GetInvalidRollCommandMessage();
         }
     }
-
-    private static string GetModifierMessage(RollDiceCommand rollDiceCommand)
-        => $"\n\ud83d\udfe6 Modifier: [ {rollDiceCommand.Modifier} ]";
-
-    private static string GetSumMessage(IEnumerable<int> keptDice, int modifier, int total)
-    {
-        var sumOfKeptDice = keptDice.Sum();
-
-        var modifierMessage = modifier != 0 
-            ? $"{(modifier > 0 ? "+" : "")}{modifier}" 
-            : "";
-
-        return modifier != 0
-            ? $"\u2728 Sum: {sumOfKeptDice}{modifierMessage} = {total}"
-            : $"\u2728 Sum: {sumOfKeptDice}{modifierMessage}";
-    }
-
-    private static string GetKeepMessage(IEnumerable<int> keptDice)
-        => $"\n\ud83d\udcbe Keeping: [ {string.Join(", ", keptDice)} ]";
-
-    private static string GetRollsMessage(IEnumerable<int> rolls)
-        => $"\ud83c\udfb2 You rolled: [ {string.Join(", ", rolls)} ]";
-
-    private static string GetDiceNumberToKeepMessage(RollDiceCommand rollDiceCommand, bool keepHighest) =>
-        keepHighest switch
-        {
-            true => $"\ud83d\udee1\ufe0f Keeping: Highest {rollDiceCommand.DicesToKeep} dice",
-            false => $"\ud83d\udee1\ufe0f Keeping: Lowest {rollDiceCommand.DicesToKeep} dice"
-        };
-
-    private static string GetRollingMessage(RollDiceCommand rollDiceCommand)
-        => $"\ud83c\udfaf Rolling: {rollDiceCommand.DiceCount} d{rollDiceCommand.DiceType}";
-    
-    private static string GetHelpMessage() =>
-        " \n" +
-        "### Basic Command: `/roll [number_of_dice]d[number_of_sides]`\n" +
-        " - **number_of_dice**: The number of dice to roll.\n" +
-        " - **number_of_sides**: The number of sides on each dice (e.g., `d4`, `d6`, `d8`, `d10`, `d12`, `d20`, `d100`).\n" +
-        "### Optional Extras:\n" +
-        " - **k[number_to_keep]**: Keep only the highest or lowest dice.\n" +
-        "   - Add `h` to keep the highest (default).\n" +
-        "   - Add `l` to keep the lowest.\n" +
-        " - **+/-[modifier]**: Add or subtract a number to the total roll.\n" +
-        "### Examples:\n" +
-        " - `/roll 3d20`: Roll 3 d20 dice.\n" +
-        " - `/roll 4d6k3h`: Roll 4 d6 dice and keep the highest 3.\n" +
-        " - `/roll 6d6k2l+2`: Roll 6 d6 dice, keep the lowest 2, and add 2 to the result.\n" +
-        "### Chain Dice Examples:\n"+
-        " - `/roll 3d20 & 2d6`: Roll 3 d20 dice and 2 d6 dice\n" +
-        " - `/roll 3d20 & 2d6k1l`: Roll 3 d20 dice and 2 d6 dice keep the lowest 1 dice\n" +
-        " - `/roll 3d20 & 2d6k1l & 5d10k2h+5`: Roll 3 d20 dice and 2 d6 dice keep the lowest 1 dice and 5 d10 dice keep 2 highest dice and add +5 modifier\n" +
-        "### Notes:\n" +
-        " - If you don't specify `h` or `l`, the bot will keep the highest dice by default.\n" +
-        " - You can use modifiers like `+5` or `-3` to adjust the total after rolling.";
 }

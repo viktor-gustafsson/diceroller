@@ -12,7 +12,7 @@ public class DiceRoller(string token)
 
     private readonly DiscordSocketClient _client = new(new DiscordSocketConfig
     {
-        GatewayIntents = GatewayIntents.AllUnprivileged | GatewayIntents.MessageContent
+        GatewayIntents = GatewayIntents.AllUnprivileged | GatewayIntents.MessageContent,
     });
 
     public async Task StartBot()

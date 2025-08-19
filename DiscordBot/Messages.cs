@@ -66,7 +66,7 @@ public static class Messages
         keepHighest switch
         {
             true => $"\ud83d\udee1\ufe0f Keeping: Highest {rollDiceCommand.DicesToKeep} dice",
-            false => $"\ud83d\udee1\ufe0f Keeping: Lowest {rollDiceCommand.DicesToKeep} dice"
+            false => $"\ud83d\udee1\ufe0f Keeping: Lowest {rollDiceCommand.DicesToKeep} dice",
         };
 
     private static string GetRollingMessage(RollDiceCommand rollDiceCommand)

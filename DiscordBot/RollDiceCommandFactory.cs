@@ -20,7 +20,7 @@ public static class RollDiceCommandFactory
             }
 
             var parts = command.ToLower().Split('d', 'k', 'h', 'l');
-
+            
             var rollDiceCommand = new RollDiceCommand
             {
                 DiceCount = int.Parse(parts[0]),

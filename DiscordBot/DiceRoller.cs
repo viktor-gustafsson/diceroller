@@ -80,32 +80,20 @@ public class DiceRoller(string token)
         {
             var result = string.Empty;
 
-            var rollDiceCommands = RollDiceCommandFactory.GetRollDiceCommands(command);
+            var rollDiceCommands = RollDiceCommandFactory.GetRollDiceCommands(command, userDisplayName);
             foreach (var rollDiceCommand in rollDiceCommands)
             {
                 if (rollDiceCommand.ValidCommand)
                     return ErrorMessages.GetInvalidRollCommandMessage();
 
-                // By default, keep highest dice if no 'h' or 'l' is provided
-                var keepHigh = !rollDiceCommand.Command.Contains('l');
-
                 // Roll the dice
                 var rand = new Random();
-                var rolls = new int[rollDiceCommand.DiceCount];
                 for (var i = 0; i < rollDiceCommand.DiceCount; i++)
                 {
-                    rolls[i] = rand.Next(1, rollDiceCommand.DiceType + 1);
+                    rollDiceCommand.Rolls[i] = rand.Next(1, rollDiceCommand.DiceType + 1);
                 }
 
-                // Sort and select the dice to keep
-                var keptDice = keepHigh
-                    ? rolls.OrderByDescending(x => x).Take(rollDiceCommand.DicesToKeep).ToList()
-                    : rolls.OrderBy(x => x).Take(rollDiceCommand.DicesToKeep).ToList();
-
-                // Apply the modifier to the total of the kept dice
-                var total = keptDice.Sum() + rollDiceCommand.Modifier;
-
-                result += Messages.GetResultMessage(userDisplayName, rollDiceCommand, keepHigh, rolls, keptDice, total);
+                result += Messages.GetResultMessage(rollDiceCommand);
             }
 
             return result;

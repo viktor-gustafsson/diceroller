@@ -4,7 +4,7 @@ namespace DiscordBot;
 
 public static class RollDiceCommandFactory
 {
-    public static List<RollDiceCommand> GetRollDiceCommands(string input)
+    public static List<RollDiceCommand> GetRollDiceCommands(string input, string userDisplayName)
     {
         var rollDiceCommands = new List<RollDiceCommand>();
         var commandSegments = input.Replace(" ","").Split('&');
@@ -29,6 +29,9 @@ public static class RollDiceCommandFactory
                 Modifier = modifier,
                 Command = command,
                 ValidCommand = parts.Length < 2,
+                Rolls = new int[int.Parse(parts[0])],
+                KeepHigh = !command.Contains('l'),
+                UserDisplayName = userDisplayName,
             };
             
             rollDiceCommands.Add(rollDiceCommand);

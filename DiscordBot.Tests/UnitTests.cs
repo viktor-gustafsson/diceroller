@@ -11,7 +11,7 @@ public class RollDiceCommandFactoryTests
         var input = "4d6k3h+2";
 
         // Act
-        var commands = RollDiceCommandFactory.GetRollDiceCommands(input);
+        var commands = RollDiceCommandFactory.GetRollDiceCommands(input, "foobar");
 
         // Assert
         commands.Count.ShouldBe(1);
@@ -31,7 +31,7 @@ public class RollDiceCommandFactoryTests
         var input = "6d6k2l-1";
 
         // Act
-        var commands = RollDiceCommandFactory.GetRollDiceCommands(input);
+        var commands = RollDiceCommandFactory.GetRollDiceCommands(input, "foobar");
 
         // Assert
         commands.Count.ShouldBe(1);
@@ -51,7 +51,7 @@ public class RollDiceCommandFactoryTests
         var input = "3d20 & 2d6k1l+5";
 
         // Act
-        var commands = RollDiceCommandFactory.GetRollDiceCommands(input);
+        var commands = RollDiceCommandFactory.GetRollDiceCommands(input, "foobar");
 
         // Assert
         commands.Count.ShouldBe(2);
@@ -80,7 +80,7 @@ public class RollDiceCommandFactoryTests
     [InlineData("xyz")]       // Nonsense
     public void Marks_Invalid_When_PartsLengthLessThan2(string input)
     {
-        Should.Throw<Exception>(() => RollDiceCommandFactory.GetRollDiceCommands(input));
+        Should.Throw<Exception>(() => RollDiceCommandFactory.GetRollDiceCommands(input, "foobar"));
     }
 }
 
@@ -99,14 +99,13 @@ public class MessagesFormattingTests
             Modifier = 0,
             Command = "4d6k3h",
             ValidCommand = false,
+            KeepHigh = true,
+            Rolls = [1, 2, 3, 4],
+            UserDisplayName = user,
         };
-        var rolls = new[] { 1, 2, 3, 4 };
-        var kept = new[] { 4, 3, 2 }.ToList();
-        var total = kept.Sum(); // 9
-        var keepHigh = true;
 
         // Act
-        var msg = Messages.GetResultMessage(user, roll, keepHigh, rolls, kept, total);
+        var msg = Messages.GetResultMessage(roll);
 
         // Assert (structure and key content, not exact formatting)
         msg.ShouldContain("```");
@@ -143,14 +142,13 @@ public class MessagesFormattingTests
             Modifier = 2,
             Command = "3d20k1l+2",
             ValidCommand = false,
+            KeepHigh = false,
+            Rolls = [5, 7, 10],
+            UserDisplayName = user,
         };
-        var rolls = new[] { 5, 7, 10 };
-        var kept = new[] { 5 }.ToList();
-        var total = kept.Sum() + roll.Modifier; // 7
-        var keepHigh = false;
 
         // Act
-        var msg = Messages.GetResultMessage(user, roll, keepHigh, rolls, kept, total);
+        var msg = Messages.GetResultMessage(roll);
 
         // Assert
         msg.ShouldContain("```");

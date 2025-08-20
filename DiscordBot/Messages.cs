@@ -2,12 +2,11 @@ namespace DiscordBot;
 
 public static class Messages
 {
-    public static string GetResultMessage(string userDisplayName, RollDiceCommand rollDiceCommand, bool keepHigh,
-        IEnumerable<int> rolls, List<int> keptDice, int total)
+    public static string GetResultMessage(RollDiceCommand rollDiceCommand)
     {
         return
             $"```" +
-            $"\n{userDisplayName} \n{GetRollingMessage(rollDiceCommand)}\n{GetDiceNumberToKeepMessage(rollDiceCommand, keepHigh)}{GetModifierMessage(rollDiceCommand)}\n{GetRollsMessage(rolls)}{GetKeepMessage(rollDiceCommand, keptDice)}\n{GetSumMessage(keptDice, rollDiceCommand.Modifier, total)}" +
+            $"\n{rollDiceCommand.UserDisplayName} \n{GetRollingMessage(rollDiceCommand)}\n{GetDiceNumberToKeepMessage(rollDiceCommand)}{GetModifierMessage(rollDiceCommand)}\n{GetRollsMessage(rollDiceCommand)}{GetKeepMessage(rollDiceCommand)}\n{GetSumMessage(rollDiceCommand, rollDiceCommand.Modifier)}" +
             $"```";
     }
     
@@ -39,31 +38,31 @@ public static class Messages
         return rollDiceCommand.Modifier == 0 ? "" : $"\n\ud83d\udfe6 Modifier: [ {rollDiceCommand.Modifier} ]";
     }
 
-    private static string GetKeepMessage(RollDiceCommand rollDiceCommand, IEnumerable<int> keptDice)
+    private static string GetKeepMessage(RollDiceCommand rollDiceCommand)
     {
         return rollDiceCommand.DiceCount == rollDiceCommand.DicesToKeep
             ? ""
-            : $"\n\ud83d\udcbe Keeping: [ {string.Join(", ", keptDice)} ]";
+            : $"\n\ud83d\udcbe Keeping: [ {string.Join(", ", rollDiceCommand.GetKeptDice())} ]";
     }
 
-    private static string GetSumMessage(IEnumerable<int> keptDice, int modifier, int total)
+    private static string GetSumMessage(RollDiceCommand rollDiceCommand, int modifier)
     {
-        var sumOfKeptDice = keptDice.Sum();
+        var sumOfKeptDice = rollDiceCommand.GetKeptDice().Sum();
 
         var modifierMessage = modifier != 0
             ? $"{(modifier > 0 ? "+" : "")}{modifier}"
             : "";
 
         return modifier != 0
-            ? $"\u2728 Sum: {sumOfKeptDice}{modifierMessage} = {total}"
+            ? $"\u2728 Sum: {sumOfKeptDice}{modifierMessage} = {rollDiceCommand.GetTotal()}"
             : $"\u2728 Sum: {sumOfKeptDice}{modifierMessage}";
     }
 
-    private static string GetRollsMessage(IEnumerable<int> rolls)
-        => $"\ud83c\udfb2 You rolled: [ {string.Join(", ", rolls)} ]";
+    private static string GetRollsMessage(RollDiceCommand rollDiceCommand)
+        => $"\ud83c\udfb2 You rolled: [ {string.Join(", ", rollDiceCommand.Rolls)} ]";
 
-    private static string GetDiceNumberToKeepMessage(RollDiceCommand rollDiceCommand, bool keepHighest) =>
-        keepHighest switch
+    private static string GetDiceNumberToKeepMessage(RollDiceCommand rollDiceCommand) =>
+        rollDiceCommand.KeepHigh switch
         {
             true => $"\ud83d\udee1\ufe0f Keeping: Highest {rollDiceCommand.DicesToKeep} dice",
             false => $"\ud83d\udee1\ufe0f Keeping: Lowest {rollDiceCommand.DicesToKeep} dice",

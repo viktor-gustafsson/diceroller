@@ -6,7 +6,7 @@ public static class Messages
     {
         return
             $"```" +
-            $"\n{rollDiceCommand.UserDisplayName} \n{GetRollingMessage(rollDiceCommand)}\n{GetDiceNumberToKeepMessage(rollDiceCommand)}{GetModifierMessage(rollDiceCommand)}\n{GetRollsMessage(rollDiceCommand)}{GetKeepMessage(rollDiceCommand)}\n{GetSumMessage(rollDiceCommand, rollDiceCommand.Modifier)}" +
+            $"\n{rollDiceCommand.UserDisplayName} \n{GetRollingMessage(rollDiceCommand)}\n{GetDiceNumberToKeepMessage(rollDiceCommand)}{GetModifierMessage(rollDiceCommand)}\n{GetRollsMessage(rollDiceCommand)}{GetKeepMessage(rollDiceCommand)}\n{GetSumMessage(rollDiceCommand)}" +
             $"```";
     }
     
@@ -45,15 +45,15 @@ public static class Messages
             : $"\n\ud83d\udcbe Keeping: [ {string.Join(", ", rollDiceCommand.GetKeptDice())} ]";
     }
 
-    private static string GetSumMessage(RollDiceCommand rollDiceCommand, int modifier)
+    private static string GetSumMessage(RollDiceCommand rollDiceCommand)
     {
         var sumOfKeptDice = rollDiceCommand.GetKeptDice().Sum();
 
-        var modifierMessage = modifier != 0
-            ? $"{(modifier > 0 ? "+" : "")}{modifier}"
+        var modifierMessage = rollDiceCommand.Modifier != 0
+            ? $"{(rollDiceCommand.Modifier > 0 ? "+" : "")}{rollDiceCommand.Modifier}"
             : "";
 
-        return modifier != 0
+        return rollDiceCommand.Modifier != 0
             ? $"\u2728 Sum: {sumOfKeptDice}{modifierMessage} = {rollDiceCommand.GetTotal()}"
             : $"\u2728 Sum: {sumOfKeptDice}{modifierMessage}";
     }

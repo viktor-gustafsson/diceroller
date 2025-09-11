@@ -11,7 +11,7 @@ public class RollDiceCommand
     public int[] Rolls { get; init; } = [];
     public bool KeepHigh { get; init; }
     public required string UserDisplayName { get; init; }
-
+    
     /// <summary>
     /// Retrieves the list of dice results to be kept based on the number specified by DicesToKeep.
     /// If the KeepHigh property is true, keeps the highest values; otherwise, keeps the lowest values.

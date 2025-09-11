@@ -58,33 +58,31 @@ public class DiceRoller(string token)
             case RollOptionName:
             {
                 var diceOption = command.Data.Options.FirstOrDefault(x => x.Name == DiceOptionName)?.Value?.ToString();
-                await command.DeferAsync();
                 var response = ParseAndRollDice(userGlobalName, diceOption);
-                await command.FollowupAsync(response);
+                await command.RespondAsync(response.Message, ephemeral: response.HiddenRoll);
                 break;
             }
             case HelpOptionName:
-                await command.DeferAsync();
                 var helpMessage = Messages.GetHelpMessage();
-                await command.FollowupAsync(helpMessage, ephemeral: true);
+                await command.RespondAsync(helpMessage, ephemeral: true);
                 break;
             default:
-                await command.RespondAsync(ErrorMessages.GetFallbackErrorMessage());
+                await command.RespondAsync(ErrorMessages.GetFallbackErrorMessage(), ephemeral: true);
                 break;
         }
     }
 
-    private static string ParseAndRollDice(string userDisplayName, string command)
+    private static (string Message, bool HiddenRoll) ParseAndRollDice(string userDisplayName, string command)
     {
         try
         {
             var result = string.Empty;
 
-            var rollDiceCommands = RollDiceCommandFactory.GetRollDiceCommands(command, userDisplayName);
-            foreach (var rollDiceCommand in rollDiceCommands)
+            var rollDiceCommandWrapper = RollDiceCommandFactory.CreateRollDiceCommandWrapper(command, userDisplayName);
+            foreach (var rollDiceCommand in rollDiceCommandWrapper.Commands)
             {
                 if (rollDiceCommand.ValidCommand)
-                    return ErrorMessages.GetInvalidRollCommandMessage();
+                    return (ErrorMessages.GetInvalidRollCommandMessage(), true);
 
                 // Roll the dice
                 var rand = new Random();
@@ -93,14 +91,14 @@ public class DiceRoller(string token)
                     rollDiceCommand.Rolls[i] = rand.Next(1, rollDiceCommand.DiceType + 1);
                 }
 
-                result += Messages.GetResultMessage(rollDiceCommand);
+                result += Messages.GetResultMessage(rollDiceCommand, rollDiceCommandWrapper.HiddenRoll);
             }
-
-            return result;
+                
+            return (result, rollDiceCommandWrapper.HiddenRoll);
         }
         catch (Exception)
         {
-            return ErrorMessages.GetInvalidRollCommandMessage();
+            return (ErrorMessages.GetInvalidRollCommandMessage(), true);
         }
     }
 }

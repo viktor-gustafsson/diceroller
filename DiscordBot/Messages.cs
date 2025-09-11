@@ -2,11 +2,11 @@ namespace DiscordBot;
 
 public static class Messages
 {
-    public static string GetResultMessage(RollDiceCommand rollDiceCommand)
+    public static string GetResultMessage(RollDiceCommand rollDiceCommand, bool hiddenRoll)
     {
         return
             $"```" +
-            $"\n{rollDiceCommand.UserDisplayName} \n{GetRollingMessage(rollDiceCommand)}\n{GetDiceNumberToKeepMessage(rollDiceCommand)}{GetModifierMessage(rollDiceCommand)}\n{GetRollsMessage(rollDiceCommand)}{GetKeepMessage(rollDiceCommand)}\n{GetSumMessage(rollDiceCommand)}" +
+            $"\n{GetHiddenMessage(hiddenRoll)}\n{rollDiceCommand.UserDisplayName} \n{GetRollingMessage(rollDiceCommand)}\n{GetDiceNumberToKeepMessage(rollDiceCommand)}{GetModifierMessage(rollDiceCommand)}\n{GetRollsMessage(rollDiceCommand)}{GetKeepMessage(rollDiceCommand)}\n{GetSumMessage(rollDiceCommand)}" +
             $"```";
     }
     
@@ -16,6 +16,8 @@ public static class Messages
         " - **number_of_dice**: The number of dice to roll.\n" +
         " - **number_of_sides**: The number of sides on each dice (e.g., `d4`, `d6`, `d8`, `d10`, `d12`, `d20`, `d100`).\n" +
         "   - Supports non-standard dice as well, such as `d3`, `d5`, `d7`, `d9`, etc.\n" +
+        "### Hidden rolls:\n" +
+        "   - Append '**hidden**' to your roll command to get a roll only visible to you\n" +
         "### Optional Extras:\n" +
         " - **k[number_to_keep]**: Keep only the highest or lowest dice.\n" +
         "   - Add `h` to keep the highest (default).\n" +
@@ -23,6 +25,7 @@ public static class Messages
         " - **+/-[modifier]**: Add or subtract a number to the total roll.\n" +
         "### Examples:\n" +
         " - `/roll 3d20`: Roll 3 d20 dice.\n" +
+        " - `/roll 3d20 hidden`: Roll 3 d20 dice. With hidden result\n" +
         " - `/roll 4d6k3h`: Roll 4 d6 dice and keep the highest 3.\n" +
         " - `/roll 6d6k2l+2`: Roll 6 d6 dice, keep the lowest 2, and add 2 to the result.\n" +
         "### Chain Dice Examples:\n" +
@@ -33,6 +36,10 @@ public static class Messages
         " - If you don't specify `h` or `l`, the bot will keep the highest dice by default.\n" +
         " - You can use modifiers like `+5` or `-3` to adjust the total after rolling.";
 
+    private static string GetHiddenMessage(bool hiddenRoll)
+    {
+       return hiddenRoll ? "🔒 Hidden roll: only you can see this message." : "";
+    }
     private static string GetModifierMessage(RollDiceCommand rollDiceCommand)
     {
         return rollDiceCommand.Modifier == 0 ? "" : $"\n\ud83d\udfe6 Modifier: [ {rollDiceCommand.Modifier} ]";

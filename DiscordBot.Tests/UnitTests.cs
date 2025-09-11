@@ -21,8 +21,8 @@ public class DiceRollParserTests
         });
 
         // Assert
-        diceRollRequest.Commands.Count.ShouldBe(1);
-        var cmd = diceRollRequest.Commands.Single();
+        diceRollRequest.Count.ShouldBe(1);
+        var cmd = diceRollRequest.Single();
         cmd.DiceCount.ShouldBe(4);
         cmd.DiceType.ShouldBe(6);
         cmd.DicesToKeep.ShouldBe(3);
@@ -45,8 +45,8 @@ public class DiceRollParserTests
         });
 
         // Assert
-        diceRollRequest.Commands.Count.ShouldBe(1);
-        var cmd = diceRollRequest.Commands.Single();
+        diceRollRequest.Count.ShouldBe(1);
+        var cmd = diceRollRequest.Single();
         cmd.DiceCount.ShouldBe(6);
         cmd.DiceType.ShouldBe(6);
         cmd.DicesToKeep.ShouldBe(2);
@@ -69,9 +69,9 @@ public class DiceRollParserTests
         });
 
         // Assert
-        diceRollRequest.Commands.Count.ShouldBe(2);
+        diceRollRequest.Count.ShouldBe(2);
 
-        var first = diceRollRequest.Commands[0];
+        var first = diceRollRequest[0];
         first.DiceCount.ShouldBe(3);
         first.DiceType.ShouldBe(20);
         first.DicesToKeep.ShouldBe(3, "default keep is dice count when k is not provided");
@@ -79,7 +79,7 @@ public class DiceRollParserTests
         first.Command.ShouldBe("3d20");
         first.ValidCommand.ShouldBeFalse();
 
-        var second = diceRollRequest.Commands[1];
+        var second = diceRollRequest[1];
         second.DiceCount.ShouldBe(2);
         second.DiceType.ShouldBe(6);
         second.DicesToKeep.ShouldBe(1);

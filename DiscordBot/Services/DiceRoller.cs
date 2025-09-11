@@ -10,8 +10,10 @@ namespace DiscordBot.Services;
 public class DiceRoller(string token)
 {
     private const string DiceOptionName = "dice";
+    private const string HiddenDiceOptionName = "hiddendice";
     private const string HelpOptionName = "help";
     private const string RollOptionName = "roll";
+    private const string RollOptionHiddenName = "roll_hidden";
 
     private readonly DiscordSocketClient _client = new(new DiscordSocketConfig
     {
@@ -36,6 +38,12 @@ public class DiceRoller(string token)
             .WithDescription("Roll some dice!")
             .AddOption(DiceOptionName, ApplicationCommandOptionType.String,
                 "[# of dice]d[dice type]k[keep amount][h/l][modifier] e.g. 2d20k1h+5", isRequired: true);
+        
+        var rollHiddenCommand = new SlashCommandBuilder()
+            .WithName(RollOptionHiddenName)
+            .WithDescription("Roll some hidden dice!")
+            .AddOption(HiddenDiceOptionName, ApplicationCommandOptionType.String,
+                "[# of dice]d[dice type]k[keep amount][h/l][modifier] e.g. 2d20k1h+5", isRequired: true);
 
         var helpCommand = new SlashCommandBuilder()
             .WithName(HelpOptionName)
@@ -43,8 +51,12 @@ public class DiceRoller(string token)
 
         try
         {
-            await _client.CreateGlobalApplicationCommandAsync(rollCommand.Build());
-            await _client.CreateGlobalApplicationCommandAsync(helpCommand.Build());
+            await _client.BulkOverwriteGlobalApplicationCommandsAsync([
+                rollCommand.Build(),
+                rollHiddenCommand.Build(),
+                helpCommand.Build(),
+            ]);
+
         }
         catch (HttpException ex)
         {
@@ -65,8 +77,21 @@ public class DiceRoller(string token)
                 {
                     Command = diceOption!,
                     UserDisplayName = userGlobalName!,
+                    HiddenDice = false,
                 });
-                await command.RespondAsync(response.Message, ephemeral: response.HiddenRoll);
+                await command.RespondAsync(response, ephemeral: false);
+                break;
+            }
+            case RollOptionHiddenName:
+            {
+                var diceOption = command.Data.Options.First(x => x.Name == HiddenDiceOptionName).Value.ToString();
+                var response = ParseAndRollDice(new MessageDto
+                {
+                    Command = diceOption!,
+                    UserDisplayName = userGlobalName!,
+                    HiddenDice = true,
+                });
+                await command.RespondAsync(response, ephemeral: true);
                 break;
             }
             case HelpOptionName:
@@ -79,17 +104,17 @@ public class DiceRoller(string token)
         }
     }
 
-    private static (string Message, bool HiddenRoll) ParseAndRollDice(MessageDto messageDto)
+    private static string ParseAndRollDice(MessageDto messageDto)
     {
         try
         {
             var sb = new StringBuilder();
 
-            var diceRollRequest = DiceRollParser.Parse(messageDto);
-            foreach (var rollDiceCommand in diceRollRequest.Commands)
+            var rollDiceCommands = DiceRollParser.Parse(messageDto);
+            foreach (var rollDiceCommand in rollDiceCommands)
             {
                 if (rollDiceCommand.ValidCommand)
-                    return (ErrorMessages.InvalidRollCommand, true);
+                    return ErrorMessages.InvalidRollCommand;
 
                 // Roll the dice
                 var rand = new Random();
@@ -98,14 +123,14 @@ public class DiceRoller(string token)
                     rollDiceCommand.Rolls[i] = rand.Next(1, rollDiceCommand.DiceType + 1);
                 }
 
-                sb.Append(Messages.GetResultMessage(rollDiceCommand, diceRollRequest.HiddenRoll));
+                sb.Append(Messages.GetResultMessage(rollDiceCommand, messageDto.HiddenDice));
             }
                 
-            return (sb.ToString(), diceRollRequest.HiddenRoll);
+            return sb.ToString();
         }
         catch (Exception)
         {
-            return (ErrorMessages.InvalidRollCommand, true);
+            return ErrorMessages.InvalidRollCommand;
         }
     }
 }

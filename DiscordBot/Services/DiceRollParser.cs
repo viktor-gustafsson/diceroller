@@ -5,11 +5,8 @@ namespace DiscordBot.Services;
 
 public static class DiceRollParser
 {
-    public static DiceRollRequest Parse(MessageDto messageDto)
+    public static List<RollDiceCommand> Parse(MessageDto messageDto)
     {
-        var hiddenRoll = messageDto.Command.Contains("hidden");
-        messageDto.Command = messageDto.Command.Replace("hidden", "");
-        
         var rollDiceCommands = new List<RollDiceCommand>();
         var commandSegments = messageDto.Command.Replace(" ","").Split('&');
         foreach (var commandSegment in commandSegments)
@@ -41,13 +38,7 @@ public static class DiceRollParser
             rollDiceCommands.Add(rollDiceCommand);
         }
 
-        var rollDiceCommandWrapper = new DiceRollRequest
-        {
-            Commands = rollDiceCommands,
-            HiddenRoll = hiddenRoll,
-        };
-
-        return rollDiceCommandWrapper;
+        return rollDiceCommands;
     } 
     
 }

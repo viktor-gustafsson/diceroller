@@ -8,7 +8,7 @@ public static class Messages
     {
         return
             $"```" +
-            $"\n{GetHiddenMessage(hiddenRoll)}\n{rollDiceCommand.UserDisplayName} \n{GetRollingMessage(rollDiceCommand)}\n{GetDiceNumberToKeepMessage(rollDiceCommand)}{GetModifierMessage(rollDiceCommand)}\n{GetRollsMessage(rollDiceCommand)}{GetKeepMessage(rollDiceCommand)}\n{GetSumMessage(rollDiceCommand)}" +
+            $"\n{rollDiceCommand.UserDisplayName}\n{GetHiddenMessage(hiddenRoll)}\n{GetRollingMessage(rollDiceCommand)}\n{GetDiceNumberToKeepMessage(rollDiceCommand)}{GetModifierMessage(rollDiceCommand)}\n{GetRollsMessage(rollDiceCommand)}{GetKeepMessage(rollDiceCommand)}\n{GetSumMessage(rollDiceCommand)}" +
             $"```";
     }
     
@@ -18,8 +18,6 @@ public static class Messages
         " - **number_of_dice**: The number of dice to roll.\n" +
         " - **number_of_sides**: The number of sides on each dice (e.g., `d4`, `d6`, `d8`, `d10`, `d12`, `d20`, `d100`).\n" +
         "   - Supports non-standard dice as well, such as `d3`, `d5`, `d7`, `d9`, etc.\n" +
-        "### Hidden rolls:\n" +
-        "   - Append '**hidden**' to your roll command to get a roll only visible to you\n" +
         "### Optional Extras:\n" +
         " - **k[number_to_keep]**: Keep only the highest or lowest dice.\n" +
         "   - Add `h` to keep the highest (default).\n" +

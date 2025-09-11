@@ -59,10 +59,10 @@ public static class Messages
         if (rollDiceCommand.Modifier != 0)
         {
             var modifierMessage = rollDiceCommand.Modifier.ToString("+0;-0;");
-            return $"\u2728 Sum: {sumOfKeptDice}{modifierMessage} = {rollDiceCommand.GetTotal()}";
+            return $"🧾 Sum: {sumOfKeptDice}{modifierMessage} = {rollDiceCommand.GetTotal()}";
         }
 
-        return $"\u2728 Sum: {sumOfKeptDice}";
+        return $"🧾 Sum: {sumOfKeptDice}";
 
     }
 

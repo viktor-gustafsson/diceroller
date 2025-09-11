@@ -55,15 +55,31 @@ public static class Messages
     private static string GetSumMessage(RollDiceCommand rollDiceCommand)
     {
         var sumOfKeptDice = rollDiceCommand.GetKeptDice().Sum();
-        var modifierMessage = rollDiceCommand.Modifier.ToString("+0;-0;");
+        
+        if (rollDiceCommand.Modifier != 0)
+        {
+            var modifierMessage = rollDiceCommand.Modifier.ToString("+0;-0;");
+            return $"\u2728 Sum: {sumOfKeptDice}{modifierMessage} = {rollDiceCommand.GetTotal()}";
+        }
 
-        return rollDiceCommand.Modifier != 0
-            ? $"\u2728 Sum: {sumOfKeptDice}{modifierMessage} = {rollDiceCommand.GetTotal()}"
-            : $"\u2728 Sum: {sumOfKeptDice}{modifierMessage}";
+        return $"\u2728 Sum: {sumOfKeptDice}";
+
     }
 
     private static string GetRollsMessage(RollDiceCommand rollDiceCommand)
-        => $"\ud83c\udfb2 You rolled: [ {string.Join(", ", rollDiceCommand.Rolls)} ]";
+    {
+        return $"\ud83c\udfb2 You rolled: [ {string.Join(", ", rollDiceCommand.Rolls.Select(roll => FormatRoll(roll, rollDiceCommand.DiceType)))} ]";
+    }
+
+    private static string FormatRoll(int roll, int diceType) =>
+        roll switch
+        {
+            1 => "1❗",
+            _ when roll == diceType => $"{roll}✨",
+            _ => roll.ToString(),
+        };
+
+
 
     private static string GetDiceNumberToKeepMessage(RollDiceCommand rollDiceCommand) =>
         rollDiceCommand.KeepHigh switch

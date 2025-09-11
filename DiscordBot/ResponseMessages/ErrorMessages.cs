@@ -1,4 +1,4 @@
-namespace DiscordBot;
+namespace DiscordBot.ResponseMessages;
 
 public static class ErrorMessages
 {

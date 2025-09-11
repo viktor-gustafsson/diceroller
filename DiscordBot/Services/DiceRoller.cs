@@ -2,8 +2,10 @@ using System.Text;
 using Discord;
 using Discord.Net;
 using Discord.WebSocket;
+using DiscordBot.Models;
+using DiscordBot.ResponseMessages;
 
-namespace DiscordBot;
+namespace DiscordBot.Services;
 
 public class DiceRoller(string token)
 {

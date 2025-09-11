@@ -1,4 +1,6 @@
-namespace DiscordBot;
+using DiscordBot.Models;
+
+namespace DiscordBot.ResponseMessages;
 
 public static class Messages
 {

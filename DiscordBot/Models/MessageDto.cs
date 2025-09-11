@@ -1,4 +1,4 @@
-namespace DiscordBot;
+namespace DiscordBot.Models;
 
 public class MessageDto
 {

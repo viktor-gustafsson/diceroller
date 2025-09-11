@@ -1,6 +1,7 @@
 using System.Text.RegularExpressions;
+using DiscordBot.Models;
 
-namespace DiscordBot;
+namespace DiscordBot.Services;
 
 public static class DiceRollParser
 {

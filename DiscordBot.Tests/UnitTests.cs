@@ -1,3 +1,6 @@
+using DiscordBot.Models;
+using DiscordBot.ResponseMessages;
+using DiscordBot.Services;
 using Shouldly;
 
 namespace DiscordBot.Tests;

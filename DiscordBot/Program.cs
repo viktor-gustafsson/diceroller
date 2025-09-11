@@ -1,10 +1,9 @@
-﻿using DiscordBot;
+﻿using DiscordBot.Services;
 
-var token = Environment.GetEnvironmentVariable("DISCORD_BOT_TOKEN");
+var discordBotToken = Environment.GetEnvironmentVariable("DISCORD_BOT_TOKEN");
 
-if (string.IsNullOrWhiteSpace(token))
-    throw new ArgumentNullException(token, "Missing discord bot token");
+ArgumentException.ThrowIfNullOrEmpty(discordBotToken);
 
-var diceRoller = new DiceRoller(token);
+var diceRoller = new DiceRoller(discordBotToken);
 
 await diceRoller.StartBot();

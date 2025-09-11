@@ -74,7 +74,7 @@ public class DiceRoller(string token)
                 await command.RespondAsync(helpMessage, ephemeral: true);
                 break;
             default:
-                await command.RespondAsync(ErrorMessages.GetFallbackErrorMessage(), ephemeral: true);
+                await command.RespondAsync(ErrorMessages.FallbackErrorMessage, ephemeral: true);
                 break;
         }
     }
@@ -89,7 +89,7 @@ public class DiceRoller(string token)
             foreach (var rollDiceCommand in diceRollRequest.Commands)
             {
                 if (rollDiceCommand.ValidCommand)
-                    return (ErrorMessages.GetInvalidRollCommandMessage(), true);
+                    return (ErrorMessages.InvalidRollCommand, true);
 
                 // Roll the dice
                 var rand = new Random();
@@ -105,7 +105,7 @@ public class DiceRoller(string token)
         }
         catch (Exception)
         {
-            return (ErrorMessages.GetInvalidRollCommandMessage(), true);
+            return (ErrorMessages.InvalidRollCommand, true);
         }
     }
 }

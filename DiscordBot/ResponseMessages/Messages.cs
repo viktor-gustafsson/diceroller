@@ -57,10 +57,7 @@ public static class Messages
     private static string GetSumMessage(RollDiceCommand rollDiceCommand)
     {
         var sumOfKeptDice = rollDiceCommand.GetKeptDice().Sum();
-
-        var modifierMessage = rollDiceCommand.Modifier != 0
-            ? $"{(rollDiceCommand.Modifier > 0 ? "+" : "")}{rollDiceCommand.Modifier}"
-            : "";
+        var modifierMessage = rollDiceCommand.Modifier.ToString("+0;-0;");
 
         return rollDiceCommand.Modifier != 0
             ? $"\u2728 Sum: {sumOfKeptDice}{modifierMessage} = {rollDiceCommand.GetTotal()}"

@@ -1,3 +1,4 @@
+using System.Text;
 using Discord;
 using Discord.Net;
 using Discord.WebSocket;
@@ -76,7 +77,7 @@ public class DiceRoller(string token)
     {
         try
         {
-            var result = string.Empty;
+            var sb = new StringBuilder();
 
             var rollDiceCommandWrapper = RollDiceCommandFactory.CreateRollDiceCommandWrapper(command, userDisplayName);
             foreach (var rollDiceCommand in rollDiceCommandWrapper.Commands)
@@ -91,10 +92,10 @@ public class DiceRoller(string token)
                     rollDiceCommand.Rolls[i] = rand.Next(1, rollDiceCommand.DiceType + 1);
                 }
 
-                result += Messages.GetResultMessage(rollDiceCommand, rollDiceCommandWrapper.HiddenRoll);
+                sb.Append(Messages.GetResultMessage(rollDiceCommand, rollDiceCommandWrapper.HiddenRoll));
             }
                 
-            return (result, rollDiceCommandWrapper.HiddenRoll);
+            return (sb.ToString(), rollDiceCommandWrapper.HiddenRoll);
         }
         catch (Exception)
         {

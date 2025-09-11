@@ -7,7 +7,7 @@ public static class Messages
     public static string GetResultMessage(RollDiceCommand rollDiceCommand, bool hiddenRoll)
     {
         return
-            $"```" +
+            $"```ansi" +
             $"\n{rollDiceCommand.UserDisplayName}\n{GetHiddenMessage(hiddenRoll)}\n{GetRollingMessage(rollDiceCommand)}\n{GetDiceNumberToKeepMessage(rollDiceCommand)}{GetModifierMessage(rollDiceCommand)}\n{GetRollsMessage(rollDiceCommand)}{GetKeepMessage(rollDiceCommand)}\n{GetSumMessage(rollDiceCommand)}" +
             $"```";
     }
@@ -74,8 +74,8 @@ public static class Messages
     private static string FormatRoll(int roll, int diceType) =>
         roll switch
         {
-            1 => "1❗",
-            _ when roll == diceType => $"{roll}✨",
+            1 => "\e[31m1\e[0m",
+            _ when roll == diceType => $"\e[34m{roll}\e[0m",
             _ => roll.ToString(),
         };
 

@@ -53,13 +53,17 @@ public class DiceRoller(string token)
 
     private static async Task MessageHandler(SocketSlashCommand command)
     {
-        var userGlobalName = (command.User as SocketGuildUser).DisplayName;
+        var userGlobalName = (command.User as SocketGuildUser)?.DisplayName;
         switch (command.Data.Name)
         {
             case RollOptionName:
             {
-                var diceOption = command.Data.Options.FirstOrDefault(x => x.Name == DiceOptionName)?.Value?.ToString();
-                var response = ParseAndRollDice(userGlobalName, diceOption);
+                var diceOption = command.Data.Options.First(x => x.Name == DiceOptionName).Value.ToString();
+                var response = ParseAndRollDice(new MessageDto
+                {
+                    Command = diceOption!,
+                    UserDisplayName = userGlobalName!,
+                });
                 await command.RespondAsync(response.Message, ephemeral: response.HiddenRoll);
                 break;
             }
@@ -73,14 +77,14 @@ public class DiceRoller(string token)
         }
     }
 
-    private static (string Message, bool HiddenRoll) ParseAndRollDice(string userDisplayName, string command)
+    private static (string Message, bool HiddenRoll) ParseAndRollDice(MessageDto messageDto)
     {
         try
         {
             var sb = new StringBuilder();
 
-            var rollDiceCommandWrapper = RollDiceCommandFactory.CreateRollDiceCommandWrapper(command, userDisplayName);
-            foreach (var rollDiceCommand in rollDiceCommandWrapper.Commands)
+            var diceRollRequest = DiceRollParser.Parse(messageDto);
+            foreach (var rollDiceCommand in diceRollRequest.Commands)
             {
                 if (rollDiceCommand.ValidCommand)
                     return (ErrorMessages.GetInvalidRollCommandMessage(), true);
@@ -92,10 +96,10 @@ public class DiceRoller(string token)
                     rollDiceCommand.Rolls[i] = rand.Next(1, rollDiceCommand.DiceType + 1);
                 }
 
-                sb.Append(Messages.GetResultMessage(rollDiceCommand, rollDiceCommandWrapper.HiddenRoll));
+                sb.Append(Messages.GetResultMessage(rollDiceCommand, diceRollRequest.HiddenRoll));
             }
                 
-            return (sb.ToString(), rollDiceCommandWrapper.HiddenRoll);
+            return (sb.ToString(), diceRollRequest.HiddenRoll);
         }
         catch (Exception)
         {

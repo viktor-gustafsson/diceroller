@@ -2,7 +2,7 @@ using Shouldly;
 
 namespace DiscordBot.Tests;
 
-public class RollDiceCommandFactoryTests
+public class DiceRollParserTests
 {
     [Fact]
     public void Parses_SingleCommand_WithKeepHighAndPositiveModifier()
@@ -11,11 +11,15 @@ public class RollDiceCommandFactoryTests
         var input = "4d6k3h+2";
 
         // Act
-        var rollDiceCommandWrapper = RollDiceCommandFactory.CreateRollDiceCommandWrapper(input, "foobar");
+        var diceRollRequest = DiceRollParser.Parse(new MessageDto
+        {
+            Command = input,
+            UserDisplayName = "foobar",
+        });
 
         // Assert
-        rollDiceCommandWrapper.Commands.Count.ShouldBe(1);
-        var cmd = rollDiceCommandWrapper.Commands.Single();
+        diceRollRequest.Commands.Count.ShouldBe(1);
+        var cmd = diceRollRequest.Commands.Single();
         cmd.DiceCount.ShouldBe(4);
         cmd.DiceType.ShouldBe(6);
         cmd.DicesToKeep.ShouldBe(3);
@@ -31,11 +35,15 @@ public class RollDiceCommandFactoryTests
         var input = "6d6k2l-1";
 
         // Act
-        var rollDiceCommandWrapper = RollDiceCommandFactory.CreateRollDiceCommandWrapper(input, "foobar");
+        var diceRollRequest = DiceRollParser.Parse(new MessageDto
+        {
+            Command = input,
+            UserDisplayName = "foobar",
+        });
 
         // Assert
-        rollDiceCommandWrapper.Commands.Count.ShouldBe(1);
-        var cmd = rollDiceCommandWrapper.Commands.Single();
+        diceRollRequest.Commands.Count.ShouldBe(1);
+        var cmd = diceRollRequest.Commands.Single();
         cmd.DiceCount.ShouldBe(6);
         cmd.DiceType.ShouldBe(6);
         cmd.DicesToKeep.ShouldBe(2);
@@ -51,12 +59,16 @@ public class RollDiceCommandFactoryTests
         var input = "3d20 & 2d6k1l+5";
 
         // Act
-        var rollDiceCommandWrapper = RollDiceCommandFactory.CreateRollDiceCommandWrapper(input, "foobar");
+        var diceRollRequest = DiceRollParser.Parse(new MessageDto
+        {
+            Command = input,
+            UserDisplayName = "foobar",
+        });
 
         // Assert
-        rollDiceCommandWrapper.Commands.Count.ShouldBe(2);
+        diceRollRequest.Commands.Count.ShouldBe(2);
 
-        var first = rollDiceCommandWrapper.Commands[0];
+        var first = diceRollRequest.Commands[0];
         first.DiceCount.ShouldBe(3);
         first.DiceType.ShouldBe(20);
         first.DicesToKeep.ShouldBe(3, "default keep is dice count when k is not provided");
@@ -64,7 +76,7 @@ public class RollDiceCommandFactoryTests
         first.Command.ShouldBe("3d20");
         first.ValidCommand.ShouldBeFalse();
 
-        var second = rollDiceCommandWrapper.Commands[1];
+        var second = diceRollRequest.Commands[1];
         second.DiceCount.ShouldBe(2);
         second.DiceType.ShouldBe(6);
         second.DicesToKeep.ShouldBe(1);
@@ -80,7 +92,11 @@ public class RollDiceCommandFactoryTests
     [InlineData("xyz")]       // Nonsense
     public void Marks_Invalid_When_PartsLengthLessThan2(string input)
     {
-        Should.Throw<Exception>(() => RollDiceCommandFactory.CreateRollDiceCommandWrapper(input, "foobar"));
+        Should.Throw<Exception>(() => DiceRollParser.Parse(new MessageDto
+        {
+            Command = input,
+            UserDisplayName = "foobar",
+        }));
     }
 }
 

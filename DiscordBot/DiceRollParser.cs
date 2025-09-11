@@ -2,15 +2,15 @@ using System.Text.RegularExpressions;
 
 namespace DiscordBot;
 
-public static class RollDiceCommandFactory
+public static class DiceRollParser
 {
-    public static RollDiceCommandWrapper CreateRollDiceCommandWrapper(string input, string userDisplayName)
+    public static DiceRollRequest Parse(MessageDto messageDto)
     {
-        var hiddenRoll = input.Contains("hidden");
-        input = input.Replace("hidden", "");
+        var hiddenRoll = messageDto.Command.Contains("hidden");
+        messageDto.Command = messageDto.Command.Replace("hidden", "");
         
         var rollDiceCommands = new List<RollDiceCommand>();
-        var commandSegments = input.Replace(" ","").Split('&');
+        var commandSegments = messageDto.Command.Replace(" ","").Split('&');
         foreach (var commandSegment in commandSegments)
         {
             var command = commandSegment;
@@ -34,13 +34,13 @@ public static class RollDiceCommandFactory
                 ValidCommand = parts.Length < 2,
                 Rolls = new int[int.Parse(parts[0])],
                 KeepHigh = !command.Contains('l'),
-                UserDisplayName = userDisplayName,
+                UserDisplayName = messageDto.UserDisplayName,
             };
             
             rollDiceCommands.Add(rollDiceCommand);
         }
 
-        var rollDiceCommandWrapper = new RollDiceCommandWrapper
+        var rollDiceCommandWrapper = new DiceRollRequest
         {
             Commands = rollDiceCommands,
             HiddenRoll = hiddenRoll,

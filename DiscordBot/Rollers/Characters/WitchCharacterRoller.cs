@@ -30,7 +30,7 @@ public abstract class WitchCharacterRoller : NewCharacterRollerBase
         var runningFrom = GetRunningFrom();
         var gold = RollForGold(1);
 
-        var newCharacterTemplate = GetNewCharacterTemplate(strength: strength, agility: agility, presence: presence, toughness: toughness, hp: hp, gold: gold, classSpecificEvent: runningFrom, specificInfo: Info);
+        var newCharacterTemplate = GetNewCharacter(strength: strength, agility: agility, presence: presence, toughness: toughness, hp: hp, gold: gold, classSpecificEvent: runningFrom, specificInfo: Info);
 
         return GetCharacterResponseString(newCharacterTemplate);
     }

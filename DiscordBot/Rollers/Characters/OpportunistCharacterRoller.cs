@@ -24,7 +24,7 @@ public abstract class OpportunistCharacterRoller : NewCharacterRollerBase
         var desire = GetDesire();
         var gold = RollForGold(2);
 
-        var newCharacterTemplate = GetNewCharacterTemplate(strength: strength, agility: agility, presence: presence, toughness: toughness, hp: hp, gold: gold, classSpecificEvent: desire, specificInfo: Info);
+        var newCharacterTemplate = GetNewCharacter(strength: strength, agility: agility, presence: presence, toughness: toughness, hp: hp, gold: gold, classSpecificEvent: desire, specificInfo: Info);
 
         return GetCharacterResponseString(newCharacterTemplate);
     }

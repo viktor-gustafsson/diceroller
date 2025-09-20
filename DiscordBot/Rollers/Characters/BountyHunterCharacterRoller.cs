@@ -22,7 +22,7 @@ public abstract class BountyHunterCharacterRoller : NewCharacterRollerBase
         var memory = GetMemory();
         var gold = RollForGold(numberOfd6: 3);
         
-        var newCharacterTemplate = GetNewCharacterTemplate(strength: strength, agility: agility, presence: presence, toughness: toughness, hp: hp, gold: gold, classSpecificEvent: memory, specificInfo: "");
+        var newCharacterTemplate = GetNewCharacter(strength: strength, agility: agility, presence: presence, toughness: toughness, hp: hp, gold: gold, classSpecificEvent: memory, specificInfo: "");
 
         return GetCharacterResponseString(newCharacterTemplate);
     }

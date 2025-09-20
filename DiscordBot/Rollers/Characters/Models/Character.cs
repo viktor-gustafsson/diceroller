@@ -1,6 +1,6 @@
-namespace DiscordBot.Rollers.Models;
+namespace DiscordBot.Rollers.Characters.Models;
 
-public class NewCharacter
+public class Character
 {
     public required string Type { get; init; }
     public required string Wants { get; init; }

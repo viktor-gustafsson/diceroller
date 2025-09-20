@@ -24,7 +24,7 @@ public abstract class MercenaryDeserterCharacterRoller : NewCharacterRollerBase
         var memory = GetMemory();
         var gold = RollForGold(numberOfd6: 2);
 
-        var newCharacterTemplate = GetNewCharacterTemplate(strength: strength, agility: agility, presence: presence, toughness: toughness, hp: hp, gold: gold, classSpecificEvent: memory, specificInfo: Info);
+        var newCharacterTemplate = GetNewCharacter(strength: strength, agility: agility, presence: presence, toughness: toughness, hp: hp, gold: gold, classSpecificEvent: memory, specificInfo: Info);
 
         return GetCharacterResponseString(newCharacterTemplate);
     }

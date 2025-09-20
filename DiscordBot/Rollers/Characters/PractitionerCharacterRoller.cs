@@ -22,7 +22,7 @@ public abstract class PractitionerCharacterRoller : NewCharacterRollerBase
         var secret = GetSecret();
         var gold = RollForGold(1);
 
-        var newCharacterTemplate = GetNewCharacterTemplate(strength: strength, agility: agility, presence: presence, toughness: toughness, hp: hp, gold: gold, classSpecificEvent: secret, specificInfo: "");
+        var newCharacterTemplate = GetNewCharacter(strength: strength, agility: agility, presence: presence, toughness: toughness, hp: hp, gold: gold, classSpecificEvent: secret, specificInfo: "");
 
         return GetCharacterResponseString(newCharacterTemplate);
     }

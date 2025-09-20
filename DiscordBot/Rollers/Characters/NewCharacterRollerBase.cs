@@ -19,9 +19,8 @@ public abstract class NewCharacterRollerBase
     protected static int GetHp(int toughness, int modifier, int dice)
     {
         var random = new Random();
-
-        var d8 = random.Next(1,dice + 1);
-        var hp = d8+toughness+modifier;
+        var diceResult = random.Next(1,dice + 1);
+        var hp = diceResult+toughness+modifier;
         
         return hp < 1 ? 1 : hp;
     }

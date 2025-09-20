@@ -29,13 +29,27 @@ public class DiscordCommandHandler(string token)
         GatewayIntents = GatewayIntents.AllUnprivileged | GatewayIntents.MessageContent,
     });
 
+    private static readonly Dictionary<string, Func<SocketSlashCommand, Task>> CommandHandlers = new()
+    {
+        [RollOptionName] = HandleDiceRoll,
+        [RollOptionHiddenName] = HandleHiddenDiceRoll,
+        [RollOptionDevilsLuckName] = HandleDevilsLuckRoll,
+        [RollOptionWoundName] = HandleWoundRoll,
+        [NewGenericCharacter] = HandleGenericCharacterCreation,
+        [NewWitchCharacter] = HandleWitchCharacterCreation,
+        [NewBountyHunterCharacter] = HandleBountyHunterCharacterCreation,
+        [NewMercenaryCharacter] = HandleMercenaryCharacterCreation,
+        [NewOpportunistCharacter] = HandleOpportunistCharacterCreation,
+        [NewPractitionerCharacter] = HandlePractitionerCharacterCreation,
+        [HelpOptionName] = HandleHelp,
+    };
+
     public async Task Start()
     {
         await _client.StartAsync();
         await _client.LoginAsync(TokenType.Bot, token);
         _client.Ready += ReadyAsync;
         _client.SlashCommandExecuted += MessageHandler;
-
         await Task.Delay(-1);
     }
 
@@ -46,63 +60,52 @@ public class DiscordCommandHandler(string token)
             var commands = CreateSlashCommands();
             await _client.BulkOverwriteGlobalApplicationCommandsAsync(commands.Select(c => c.Build()).ToArray<ApplicationCommandProperties>());
         }
-        
         catch (HttpException ex)
         {
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(ex.Errors, Newtonsoft.Json.Formatting.Indented);
             Console.WriteLine(json);
         }
     }
-    
+
     private static List<SlashCommandBuilder> CreateSlashCommands()
     {
         const string diceDescription = "[# of dice]d[dice type]k[keep amount][h/l][modifier] e.g. 2d20k1h+5";
-    
+
         return
         [
             new SlashCommandBuilder()
                 .WithName(RollOptionName)
                 .WithDescription("Roll some dice!")
                 .AddOption(DiceOptionName, ApplicationCommandOptionType.String, diceDescription, isRequired: true),
-
             new SlashCommandBuilder()
                 .WithName(RollOptionHiddenName)
                 .WithDescription("Roll some hidden dice!")
                 .AddOption(HiddenDiceOptionName, ApplicationCommandOptionType.String, diceDescription,
                     isRequired: true),
-
             new SlashCommandBuilder()
                 .WithName(RollOptionDevilsLuckName)
                 .WithDescription("Roll devils luck!"),
-
             new SlashCommandBuilder()
                 .WithName(RollOptionWoundName)
                 .WithDescription("Roll wound!"),
-            
             new SlashCommandBuilder()
                 .WithName(NewGenericCharacter)
                 .WithDescription("Roll a new generic character!"),
-            
             new SlashCommandBuilder()
                 .WithName(NewWitchCharacter)
                 .WithDescription("Roll a new witch character!"),
-            
             new SlashCommandBuilder()
                 .WithName(NewBountyHunterCharacter)
                 .WithDescription("Roll a new bounty hunter character!"),
-            
             new SlashCommandBuilder()
                 .WithName(NewMercenaryCharacter)
                 .WithDescription("Roll a new mercenary deserter character!"),
-            
             new SlashCommandBuilder()
                 .WithName(NewOpportunistCharacter)
                 .WithDescription("Roll a new opportunist character!"),
-            
             new SlashCommandBuilder()
                 .WithName(NewPractitionerCharacter)
                 .WithDescription("Roll a new practitioner character!"),
-
             new SlashCommandBuilder()
                 .WithName(HelpOptionName)
                 .WithDescription("Explanation and examples"),
@@ -111,92 +114,93 @@ public class DiscordCommandHandler(string token)
 
     private static async Task MessageHandler(SocketSlashCommand command)
     {
-        var userGlobalName = (command.User as SocketGuildUser)?.DisplayName;
-        switch (command.Data.Name)
+        if (CommandHandlers.TryGetValue(command.Data.Name, out var handler))
         {
-            case RollOptionName:
-            {
-                var diceOption = command.Data.Options.First(x => x.Name == DiceOptionName).Value.ToString();
-                var response = DiceRoller.ParseAndRollDice(new MessageDto
-                {
-                    Command = diceOption!,
-                    UserDisplayName = userGlobalName!,
-                    HiddenDice = false,
-                });
-                await command.RespondAsync(response, ephemeral: false);
-                break;
-            }
-            case RollOptionHiddenName:
-            {
-                var diceOption = command.Data.Options.First(x => x.Name == HiddenDiceOptionName).Value.ToString();
-                var response = DiceRoller.ParseAndRollDice(new MessageDto
-                {
-                    Command = diceOption!,
-                    UserDisplayName = userGlobalName!,
-                    HiddenDice = true,
-                });
-                await command.RespondAsync(response, ephemeral: true);
-                break;
-            }
-            case RollOptionDevilsLuckName:
-            {
-                var rollDevilsLuck = DevilsLuckRoller.Roll();
-                await command.RespondAsync(rollDevilsLuck, ephemeral: false);
-                break;
-            }
-            case RollOptionWoundName:
-            {
-                var rollWound = WoundRoller.Roll();
-                await command.RespondAsync(rollWound, ephemeral: false);
-                break;
-            }
-            case NewGenericCharacter:
-            {
-                var newGenericCharacter = GenericNewCharacterRoller.Roll();
-                await command.RespondAsync(newGenericCharacter, ephemeral: false);
-                break;
-            }
-            case NewWitchCharacter:
-            {
-                var newWitchCharacter = WitchCharacterRoller.Roll();
-                await command.RespondAsync(newWitchCharacter, ephemeral: false);
-                break;
-            }
-            case NewBountyHunterCharacter:
-            {
-                var newBountyHunterCharacter = BountyHunterCharacterRoller.Roll();
-                await command.RespondAsync(newBountyHunterCharacter, ephemeral: false);
-                break;
-            }
-            case NewMercenaryCharacter:
-            {
-                var newMercenaryDeserter = MercenaryDeserterCharacterRoller.Roll();
-                await command.RespondAsync(newMercenaryDeserter, ephemeral: false);
-                break;
-            }
-            case NewOpportunistCharacter:
-            {
-                var newOpportunistCharacter = OpportunistCharacterRoller.Roll();
-                await command.RespondAsync(newOpportunistCharacter, ephemeral: false);
-                break;
-            }
-            case NewPractitionerCharacter:
-            {
-                var newPractitionerCharacter = PractitionerCharacterRoller.Roll();
-                await command.RespondAsync(newPractitionerCharacter, ephemeral: false);
-                break;
-            }
-            case HelpOptionName:
-            {
-                var helpMessage = Messages.GetHelpMessage();
-                await command.RespondAsync(helpMessage, ephemeral: true);
-                break; 
-            }
-            default:
-            {
-                await command.RespondAsync(ErrorMessages.FallbackErrorMessage, ephemeral: true);
-                break;
-            }
+            await handler(command);
         }
+        else
+        {
+            await command.RespondAsync(ErrorMessages.FallbackErrorMessage, ephemeral: true);
+        }
+    }
+
+    private static async Task HandleDiceRoll(SocketSlashCommand command)
+    {
+        var userGlobalName = (command.User as SocketGuildUser)?.DisplayName;
+        var diceOption = command.Data.Options.First(x => x.Name == DiceOptionName).Value.ToString();
+        var response = DiceRoller.ParseAndRollDice(new MessageDto
+        {
+            Command = diceOption!,
+            UserDisplayName = userGlobalName!,
+            HiddenDice = false,
+        });
+        await command.RespondAsync(response, ephemeral: false);
+    }
+
+    private static async Task HandleHiddenDiceRoll(SocketSlashCommand command)
+    {
+        var userGlobalName = (command.User as SocketGuildUser)?.DisplayName;
+        var diceOption = command.Data.Options.First(x => x.Name == HiddenDiceOptionName).Value.ToString();
+        var response = DiceRoller.ParseAndRollDice(new MessageDto
+        {
+            Command = diceOption!,
+            UserDisplayName = userGlobalName!,
+            HiddenDice = true,
+        });
+        await command.RespondAsync(response, ephemeral: true);
+    }
+
+    private static async Task HandleDevilsLuckRoll(SocketSlashCommand command)
+    {
+        var rollDevilsLuck = DevilsLuckRoller.Roll();
+        await command.RespondAsync(rollDevilsLuck, ephemeral: false);
+    }
+
+    private static async Task HandleWoundRoll(SocketSlashCommand command)
+    {
+        var rollWound = WoundRoller.Roll();
+        await command.RespondAsync(rollWound, ephemeral: false);
+    }
+
+    private static async Task HandleGenericCharacterCreation(SocketSlashCommand command)
+    {
+        var newGenericCharacter = GenericNewCharacterRoller.Roll();
+        await command.RespondAsync(newGenericCharacter, ephemeral: false);
+    }
+
+    private static async Task HandleWitchCharacterCreation(SocketSlashCommand command)
+    {
+        var newWitchCharacter = WitchCharacterRoller.Roll();
+        await command.RespondAsync(newWitchCharacter, ephemeral: false);
+    }
+
+    private static async Task HandleBountyHunterCharacterCreation(SocketSlashCommand command)
+    {
+        var newBountyHunterCharacter = BountyHunterCharacterRoller.Roll();
+        await command.RespondAsync(newBountyHunterCharacter, ephemeral: false);
+    }
+
+    private static async Task HandleMercenaryCharacterCreation(SocketSlashCommand command)
+    {
+        var newMercenaryDeserter = MercenaryDeserterCharacterRoller.Roll();
+        await command.RespondAsync(newMercenaryDeserter, ephemeral: false);
+    }
+
+    private static async Task HandleOpportunistCharacterCreation(SocketSlashCommand command)
+    {
+        var newOpportunistCharacter = OpportunistCharacterRoller.Roll();
+        await command.RespondAsync(newOpportunistCharacter, ephemeral: false);
+    }
+
+    private static async Task HandlePractitionerCharacterCreation(SocketSlashCommand command)
+    {
+        var newPractitionerCharacter = PractitionerCharacterRoller.Roll();
+        await command.RespondAsync(newPractitionerCharacter, ephemeral: false);
+    }
+
+    private static async Task HandleHelp(SocketSlashCommand command)
+    {
+        var helpMessage = Messages.GetHelpMessage();
+        await command.RespondAsync(helpMessage, ephemeral: true);
     }
 }

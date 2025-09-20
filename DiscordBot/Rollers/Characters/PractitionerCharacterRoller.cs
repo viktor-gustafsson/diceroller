@@ -1,6 +1,6 @@
 namespace DiscordBot.Rollers.Characters;
 
-public class PractitionerCharacterRoller : NewCharacterRollerBase
+public abstract class PractitionerCharacterRoller : NewCharacterRollerBase
 {
     private static readonly Dictionary<int, string> Secrets = new()
     {

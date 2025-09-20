@@ -1,6 +1,6 @@
 namespace DiscordBot.Rollers.Characters;
 
-public class MercenaryDeserterCharacterRoller : NewCharacterRollerBase
+public abstract class MercenaryDeserterCharacterRoller : NewCharacterRollerBase
 {
     private static readonly Dictionary<int, string> Memories = new()
     {

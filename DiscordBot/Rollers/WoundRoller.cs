@@ -1,4 +1,4 @@
-namespace DiscordBot.Services.Rollers;
+namespace DiscordBot.Rollers;
 
 public class WoundRoller
 {

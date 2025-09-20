@@ -1,8 +1,9 @@
 using System.Text;
 using DiscordBot.Models;
 using DiscordBot.ResponseMessages;
+using DiscordBot.Services;
 
-namespace DiscordBot.Services.Rollers;
+namespace DiscordBot.Rollers;
 
 public static class DiceRoller
 {

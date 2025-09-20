@@ -3,7 +3,7 @@ using Discord.Net;
 using Discord.WebSocket;
 using DiscordBot.Models;
 using DiscordBot.ResponseMessages;
-using DiscordBot.Services.Rollers;
+using DiscordBot.Rollers;
 
 namespace DiscordBot.Handlers;
 
@@ -16,6 +16,7 @@ public class DiscordCommandHandler(string token)
     private const string RollOptionHiddenName = "roll_hidden";
     private const string RollOptionDevilsLuckName = "roll_devils_luck";
     private const string RollOptionWoundName = "roll_wound";
+    private const string RollOptionNewCharacter = "roll_char";
 
     private readonly DiscordSocketClient _client = new(new DiscordSocketConfig
     {
@@ -71,6 +72,10 @@ public class DiscordCommandHandler(string token)
             new SlashCommandBuilder()
                 .WithName(RollOptionWoundName)
                 .WithDescription("Roll wound!"),
+            
+            new SlashCommandBuilder()
+                .WithName(RollOptionNewCharacter)
+                .WithDescription("Roll a new character!"),
 
             new SlashCommandBuilder()
                 .WithName(HelpOptionName)
@@ -117,6 +122,12 @@ public class DiscordCommandHandler(string token)
             {
                 var rollWound = WoundRoller.Roll();
                 await command.RespondAsync(rollWound, ephemeral: false);
+                break;
+            }
+            case RollOptionNewCharacter:
+            {
+                var newCharacter = NewCharacterRoller.Roll();
+                await command.RespondAsync(newCharacter, ephemeral: false);
                 break;
             }
             case HelpOptionName:

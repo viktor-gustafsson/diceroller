@@ -4,6 +4,7 @@ using Discord.WebSocket;
 using DiscordBot.Models;
 using DiscordBot.ResponseMessages;
 using DiscordBot.Rollers;
+using DiscordBot.Rollers.Characters;
 
 namespace DiscordBot.Handlers;
 
@@ -16,7 +17,12 @@ public class DiscordCommandHandler(string token)
     private const string RollOptionHiddenName = "roll_hidden";
     private const string RollOptionDevilsLuckName = "roll_devils_luck";
     private const string RollOptionWoundName = "roll_wound";
-    private const string RollOptionNewCharacter = "roll_char";
+    private const string NewGenericCharacter = "new_generic_char";
+    private const string NewWitchCharacter = "new_witch_char";
+    private const string NewBountyHunterCharacter = "new_bounty_hunter_char";
+    private const string NewMercenaryCharacter = "new_mercenary_deserter_char";
+    private const string NewOpportunistCharacter = "new_opportunist_char";
+    private const string NewPractitionerCharacter = "new_practitioner_char";
 
     private readonly DiscordSocketClient _client = new(new DiscordSocketConfig
     {
@@ -74,8 +80,28 @@ public class DiscordCommandHandler(string token)
                 .WithDescription("Roll wound!"),
             
             new SlashCommandBuilder()
-                .WithName(RollOptionNewCharacter)
-                .WithDescription("Roll a new character!"),
+                .WithName(NewGenericCharacter)
+                .WithDescription("Roll a new generic character!"),
+            
+            new SlashCommandBuilder()
+                .WithName(NewWitchCharacter)
+                .WithDescription("Roll a new witch character!"),
+            
+            new SlashCommandBuilder()
+                .WithName(NewBountyHunterCharacter)
+                .WithDescription("Roll a new bounty hunter character!"),
+            
+            new SlashCommandBuilder()
+                .WithName(NewMercenaryCharacter)
+                .WithDescription("Roll a new mercenary deserter character!"),
+            
+            new SlashCommandBuilder()
+                .WithName(NewOpportunistCharacter)
+                .WithDescription("Roll a new opportunist character!"),
+            
+            new SlashCommandBuilder()
+                .WithName(NewPractitionerCharacter)
+                .WithDescription("Roll a new practitioner character!"),
 
             new SlashCommandBuilder()
                 .WithName(HelpOptionName)
@@ -124,10 +150,40 @@ public class DiscordCommandHandler(string token)
                 await command.RespondAsync(rollWound, ephemeral: false);
                 break;
             }
-            case RollOptionNewCharacter:
+            case NewGenericCharacter:
             {
-                var newCharacter = NewCharacterRoller.Roll();
-                await command.RespondAsync(newCharacter, ephemeral: false);
+                var newGenericCharacter = GenericNewCharacterRoller.Roll();
+                await command.RespondAsync(newGenericCharacter, ephemeral: false);
+                break;
+            }
+            case NewWitchCharacter:
+            {
+                var newWitchCharacter = WitchCharacterRoller.Roll();
+                await command.RespondAsync(newWitchCharacter, ephemeral: false);
+                break;
+            }
+            case NewBountyHunterCharacter:
+            {
+                var newBountyHunterCharacter = BountyHunterCharacterRoller.Roll();
+                await command.RespondAsync(newBountyHunterCharacter, ephemeral: false);
+                break;
+            }
+            case NewMercenaryCharacter:
+            {
+                var newMercenaryDeserter = MercenaryDeserterCharacterRoller.Roll();
+                await command.RespondAsync(newMercenaryDeserter, ephemeral: false);
+                break;
+            }
+            case NewOpportunistCharacter:
+            {
+                var newOpportunistCharacter = OpportunistCharacterRoller.Roll();
+                await command.RespondAsync(newOpportunistCharacter, ephemeral: false);
+                break;
+            }
+            case NewPractitionerCharacter:
+            {
+                var newPractitionerCharacter = PractitionerCharacterRoller.Roll();
+                await command.RespondAsync(newPractitionerCharacter, ephemeral: false);
                 break;
             }
             case HelpOptionName:

@@ -12,8 +12,10 @@ public class DiceRoller(string token)
     private const string DiceOptionName = "dice";
     private const string HiddenDiceOptionName = "hiddendice";
     private const string HelpOptionName = "help";
+    private const string DevilsLuckName = "devils_luck";
     private const string RollOptionName = "roll";
     private const string RollOptionHiddenName = "roll_hidden";
+    private const string RollOptionDevilsLuckName = "roll_devils_luck";
 
     private readonly DiscordSocketClient _client = new(new DiscordSocketConfig
     {
@@ -45,6 +47,10 @@ public class DiceRoller(string token)
             .AddOption(HiddenDiceOptionName, ApplicationCommandOptionType.String,
                 "[# of dice]d[dice type]k[keep amount][h/l][modifier] e.g. 2d20k1h+5", isRequired: true);
 
+        var devilsLuckCommand = new SlashCommandBuilder()
+            .WithName(RollOptionDevilsLuckName)
+            .WithDescription("Roll devils luck!");
+
         var helpCommand = new SlashCommandBuilder()
             .WithName(HelpOptionName)
             .WithDescription("Explanation and examples");
@@ -54,6 +60,7 @@ public class DiceRoller(string token)
             await _client.BulkOverwriteGlobalApplicationCommandsAsync([
                 rollCommand.Build(),
                 rollHiddenCommand.Build(),
+                devilsLuckCommand.Build(),
                 helpCommand.Build(),
             ]);
 
@@ -94,13 +101,23 @@ public class DiceRoller(string token)
                 await command.RespondAsync(response, ephemeral: true);
                 break;
             }
+            case RollOptionDevilsLuckName:
+            {
+                var rollDevilsLuck = DevilsLuckRoller.Roll();
+                await command.RespondAsync(rollDevilsLuck, ephemeral: false);
+                break;
+            }
             case HelpOptionName:
+            {
                 var helpMessage = Messages.GetHelpMessage();
                 await command.RespondAsync(helpMessage, ephemeral: true);
-                break;
+                break; 
+            }
             default:
+            {
                 await command.RespondAsync(ErrorMessages.FallbackErrorMessage, ephemeral: true);
                 break;
+            }
         }
     }
 

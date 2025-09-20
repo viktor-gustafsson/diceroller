@@ -2,28 +2,6 @@ namespace DiscordBot.Rollers;
 
 public static class NewCharacterRoller
 {
-    private static readonly Dictionary<int, int> AbilityStartValue = new()
-    {
-        [1] = -3,
-        [2] = -3,
-        [3] = -3,
-        [4] = -3,
-        [5] = -2,
-        [6] = -2,
-        [7] = -1,
-        [8] = -1,
-        [9] = 0,
-        [10] = 0,
-        [11] = 0,
-        [12] = 0,
-        [13] = 1,
-        [14] = 1,
-        [15] = 2,
-        [16] = 2,
-        [17] = 3,
-        [18] = 3,
-    };
-    
     public static string Roll()
     {
         var strength = GetStat();
@@ -31,18 +9,20 @@ public static class NewCharacterRoller
         var presence = GetStat();
         var toughness = GetStat();
 
-        var hp = GetHp(AbilityStartValue[toughness]);
+        var hp = GetHp(GetAbilityModifier(toughness));
 
         return
             $"```\n" +
             $"🎲 NEW CHARACTER STATS\n\n" +
-            $"💪 Strength:  [{AbilityStartValue[strength],3}]  (Rolled: {strength,2})\n" +
-            $"🏃 Agility:   [{AbilityStartValue[agility],3}]  (Rolled: {agility,2})\n" +
-            $"👑 Presence:  [{AbilityStartValue[presence],3}]  (Rolled: {presence,2})\n" +
-            $"🛡️ Toughness: [{AbilityStartValue[toughness],3}]  (Rolled: {toughness,2})\n\n" +
+            $"💪 Strength:  [{GetAbilityModifier(strength),3}]  (Rolled: {strength,2})\n" +
+            $"🏃 Agility:   [{GetAbilityModifier(agility),3}]  (Rolled: {agility,2})\n" +
+            $"👑 Presence:  [{GetAbilityModifier(presence),3}]  (Rolled: {presence,2})\n" +
+            $"🛡️ Toughness: [{GetAbilityModifier(toughness),3}]  (Rolled: {toughness,2})\n\n" +
             $"❤️ Hit Points: {hp}\n" +
             $"```";;
     }
+    
+    private static int GetAbilityModifier(int abilityScore) => (abilityScore - 10) / 2;
 
     private static int GetHp(int toughness)
     {

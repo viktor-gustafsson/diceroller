@@ -1,9 +1,10 @@
-﻿using DiscordBot.Services;
+﻿using DiscordBot.Handlers;
+using DiscordBot.Services;
 
 var discordBotToken = Environment.GetEnvironmentVariable("DISCORD_BOT_TOKEN");
 
 ArgumentException.ThrowIfNullOrEmpty(discordBotToken);
 
-var diceRoller = new DiceRoller(discordBotToken);
+var discordCommandHandler = new DiscordCommandHandler(discordBotToken);
 
-await diceRoller.StartBot();
+await discordCommandHandler.Start();

@@ -1,8 +1,8 @@
-namespace DiscordBot.Services;
+namespace DiscordBot.Services.Rollers;
 
 public static class DevilsLuckRoller
 {
-    private static Dictionary<int, string> Effects = new()
+    private static readonly Dictionary<int, string> Effects = new()
     {
         [1] = "Small bony horns sprout from your forehead, you feel them grow when you do violence. (d6 headbutt)",
         [2] = "Your hands are permanently blackened.",

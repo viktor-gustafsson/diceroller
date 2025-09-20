@@ -1,0 +1,38 @@
+using System.Text;
+using DiscordBot.Models;
+using DiscordBot.ResponseMessages;
+
+namespace DiscordBot.Services.Rollers;
+
+public static class DiceRoller
+{
+    public static string ParseAndRollDice(MessageDto messageDto)
+    {
+        try
+        {
+            var sb = new StringBuilder();
+
+            var rollDiceCommands = DiceRollParser.Parse(messageDto);
+            foreach (var rollDiceCommand in rollDiceCommands)
+            {
+                if (rollDiceCommand.ValidCommand)
+                    return ErrorMessages.InvalidRollCommand;
+
+                // Roll the dice
+                var rand = new Random();
+                for (var i = 0; i < rollDiceCommand.DiceCount; i++)
+                {
+                    rollDiceCommand.Rolls[i] = rand.Next(1, rollDiceCommand.DiceType + 1);
+                }
+
+                sb.Append(Messages.GetResultMessage(rollDiceCommand, messageDto.HiddenDice));
+            }
+                
+            return sb.ToString();
+        }
+        catch (Exception)
+        {
+            return ErrorMessages.InvalidRollCommand;
+        }
+    }
+}

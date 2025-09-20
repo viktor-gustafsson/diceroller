@@ -20,7 +20,7 @@ public abstract class PractitionerCharacterRoller : NewCharacterRollerBase
         var toughness = GetStat(modifier: 1);
         var hp = GetHp(toughness: GetAbilityModifier(toughness), modifier: 0, dice: 12);
         var secret = GetSecret();
-        var gold = RollForGold(1);
+        var gold = GetGold(1);
 
         var newCharacterTemplate = GetNewCharacter(strength: strength, agility: agility, presence: presence, toughness: toughness, hp: hp, gold: gold, classSpecificEvent: secret, specificInfo: "");
 

@@ -22,7 +22,7 @@ public abstract class MercenaryDeserterCharacterRoller : NewCharacterRollerBase
         var toughness = GetStat(modifier: 2);
         var hp = GetHp(toughness: GetAbilityModifier(toughness), modifier: 0, dice: 10);
         var memory = GetMemory();
-        var gold = RollForGold(numberOfd6: 2);
+        var gold = GetGold(numberOfd6: 2);
 
         var newCharacterTemplate = GetNewCharacter(strength: strength, agility: agility, presence: presence, toughness: toughness, hp: hp, gold: gold, classSpecificEvent: memory, specificInfo: Info);
 

@@ -22,7 +22,7 @@ public abstract class OpportunistCharacterRoller : NewCharacterRollerBase
         var toughness = GetStat(modifier: 0);
         var hp = GetHp(toughness: GetAbilityModifier(toughness), modifier: 0, dice: 6);
         var desire = GetDesire();
-        var gold = RollForGold(2);
+        var gold = GetGold(2);
 
         var newCharacterTemplate = GetNewCharacter(strength: strength, agility: agility, presence: presence, toughness: toughness, hp: hp, gold: gold, classSpecificEvent: desire, specificInfo: Info);
 

@@ -9,7 +9,7 @@ public abstract class GenericNewCharacterRoller: NewCharacterRollerBase
         var presence = GetStat();
         var toughness = GetStat();
         var hp = GetHp(GetAbilityModifier(toughness), modifier: 2, dice: 8);
-        var gold = RollForGold(4);
+        var gold = GetGold(4);
         
         var newCharacterTemplate = GetNewCharacter(strength: strength, agility: agility, presence: presence, toughness: toughness, hp: hp, gold: gold, classSpecificEvent: "", specificInfo: "");
 

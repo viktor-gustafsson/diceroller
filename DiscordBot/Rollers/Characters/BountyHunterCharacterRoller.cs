@@ -20,7 +20,7 @@ public abstract class BountyHunterCharacterRoller : NewCharacterRollerBase
         var toughness = GetStat(modifier: 0);
         var hp = GetHp(toughness: GetAbilityModifier(toughness), modifier: 0, dice: 8);
         var memory = GetMemory();
-        var gold = RollForGold(numberOfd6: 3);
+        var gold = GetGold(numberOfd6: 3);
         
         var newCharacterTemplate = GetNewCharacter(strength: strength, agility: agility, presence: presence, toughness: toughness, hp: hp, gold: gold, classSpecificEvent: memory, specificInfo: "");
 

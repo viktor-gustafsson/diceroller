@@ -28,7 +28,7 @@ public abstract class WitchCharacterRoller : NewCharacterRollerBase
         var toughness = GetStat(modifier: 0);
         var hp = GetHp(toughness: GetAbilityModifier(toughness), modifier: 0, dice: 6);
         var runningFrom = GetRunningFrom();
-        var gold = RollForGold(1);
+        var gold = GetGold(1);
 
         var newCharacterTemplate = GetNewCharacter(strength: strength, agility: agility, presence: presence, toughness: toughness, hp: hp, gold: gold, classSpecificEvent: runningFrom, specificInfo: Info);
 

@@ -4,7 +4,7 @@ namespace DiscordBot.Rollers.Characters;
 
 public abstract class NewCharacterRollerBase
 {
-    protected static int RollForGold(int numberOfd6)
+    protected static int GetGold(int numberOfd6)
     {
         var random = new Random();
         var sum = 0;

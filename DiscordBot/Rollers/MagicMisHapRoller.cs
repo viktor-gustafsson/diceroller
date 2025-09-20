@@ -1,6 +1,6 @@
 namespace DiscordBot.Rollers;
 
-public class MagicMisHapRoller
+public abstract class MagicMisHapRoller
 {
     private static readonly Dictionary<int, string> MagicMishaps = new()
     {

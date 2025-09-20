@@ -17,6 +17,7 @@ public class DiscordCommandHandler(string token)
     private const string RollOptionHiddenName = "roll_hidden";
     private const string RollOptionDevilsLuckName = "roll_devils_luck";
     private const string RollOptionWoundName = "roll_wound";
+    private const string RollOptionMagicMisHapName = "roll_magic_mis_hap";
     private const string NewGenericCharacter = "new_generic_char";
     private const string NewWitchCharacter = "new_witch_char";
     private const string NewBountyHunterCharacter = "new_bounty_hunter_char";
@@ -35,6 +36,7 @@ public class DiscordCommandHandler(string token)
         [RollOptionHiddenName] = HandleHiddenDiceRoll,
         [RollOptionDevilsLuckName] = HandleDevilsLuckRoll,
         [RollOptionWoundName] = HandleWoundRoll,
+        [RollOptionMagicMisHapName] = HandleMagicMisHapRoll,
         [NewGenericCharacter] = HandleGenericCharacterCreation,
         [NewWitchCharacter] = HandleWitchCharacterCreation,
         [NewBountyHunterCharacter] = HandleBountyHunterCharacterCreation,
@@ -88,6 +90,9 @@ public class DiscordCommandHandler(string token)
             new SlashCommandBuilder()
                 .WithName(RollOptionWoundName)
                 .WithDescription("Roll wound!"),
+            new SlashCommandBuilder()
+                .WithName(RollOptionMagicMisHapName)
+                .WithDescription("Roll magic mis-hap!"),
             new SlashCommandBuilder()
                 .WithName(NewGenericCharacter)
                 .WithDescription("Roll a new generic character!"),
@@ -156,6 +161,11 @@ public class DiscordCommandHandler(string token)
         await command.RespondAsync(rollDevilsLuck, ephemeral: false);
     }
 
+    private static async Task HandleMagicMisHapRoll(SocketSlashCommand command)
+    {
+        var rollMagicMisHap = MagicMisHapRoller.Roll();
+        await command.RespondAsync(rollMagicMisHap, ephemeral: false);
+    }
     private static async Task HandleWoundRoll(SocketSlashCommand command)
     {
         var rollWound = WoundRoller.Roll();

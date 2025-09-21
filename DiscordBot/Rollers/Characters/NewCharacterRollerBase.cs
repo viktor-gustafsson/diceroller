@@ -81,6 +81,7 @@ public abstract class NewCharacterRollerBase
 
         return $"```\n" +
                $"🎲 NEW CHARACTER STATS\n\n" +
+               $"{character.SubTypeSpecificInfo}\n"+
                $"💪 Strength:  [{GetAbilityModifier(character.Strength),3}]  (Rolled: {character.Strength,2})\n" +
                $"🏃 Agility:   [{GetAbilityModifier(character.Agility),3}]  (Rolled: {character.Agility,2})\n" +
                $"👑 Presence:  [{GetAbilityModifier(character.Presence),3}]  (Rolled: {character.Presence,2})\n" +

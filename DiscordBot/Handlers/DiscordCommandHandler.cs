@@ -5,6 +5,7 @@ using DiscordBot.Models;
 using DiscordBot.ResponseMessages;
 using DiscordBot.Rollers;
 using DiscordBot.Rollers.Characters;
+using DiscordBot.Rollers.Enums;
 
 namespace DiscordBot.Handlers;
 
@@ -18,12 +19,12 @@ public class DiscordCommandHandler(string token)
     private const string RollOptionDevilsLuckName = "roll_devils_luck";
     private const string RollOptionWoundName = "roll_wound";
     private const string RollOptionMagicMisHapName = "roll_magic_mis_hap";
-    private const string NewGenericCharacter = "new_generic_char";
     private const string NewWitchCharacter = "new_witch_char";
     private const string NewBountyHunterCharacter = "new_bounty_hunter_char";
     private const string NewMercenaryCharacter = "new_mercenary_deserter_char";
     private const string NewOpportunistCharacter = "new_opportunist_char";
     private const string NewPractitionerCharacter = "new_practitioner_char";
+    private const string SubTypeOptionName = "sub_type";
 
     private readonly DiscordSocketClient _client = new(new DiscordSocketConfig
     {
@@ -37,7 +38,6 @@ public class DiscordCommandHandler(string token)
         [RollOptionDevilsLuckName] = HandleDevilsLuckRoll,
         [RollOptionWoundName] = HandleWoundRoll,
         [RollOptionMagicMisHapName] = HandleMagicMisHapRoll,
-        [NewGenericCharacter] = HandleGenericCharacterCreation,
         [NewWitchCharacter] = HandleWitchCharacterCreation,
         [NewBountyHunterCharacter] = HandleBountyHunterCharacterCreation,
         [NewMercenaryCharacter] = HandleMercenaryCharacterCreation,
@@ -94,23 +94,30 @@ public class DiscordCommandHandler(string token)
                 .WithName(RollOptionMagicMisHapName)
                 .WithDescription("Roll magic mis-hap!"),
             new SlashCommandBuilder()
-                .WithName(NewGenericCharacter)
-                .WithDescription("Roll a new generic character!"),
-            new SlashCommandBuilder()
                 .WithName(NewWitchCharacter)
-                .WithDescription("Roll a new witch character!"),
+                .WithDescription("Roll a new witch character!")
+                .AddOption(SubTypeOptionName, ApplicationCommandOptionType.Integer, "1 = Wood Witch, 2 = Herbalist, 3 = Hexen",
+                    minValue:1, maxValue:3, isRequired: true),
             new SlashCommandBuilder()
                 .WithName(NewBountyHunterCharacter)
-                .WithDescription("Roll a new bounty hunter character!"),
+                .WithDescription("Roll a new bounty hunter character!")
+                .AddOption(SubTypeOptionName, ApplicationCommandOptionType.Integer, "1 = Pistolier, 2 = Master Trapper, 3 = Beast Hunter",
+                    minValue:1, maxValue:3, isRequired: true),
             new SlashCommandBuilder()
                 .WithName(NewMercenaryCharacter)
-                .WithDescription("Roll a new mercenary deserter character!"),
+                .WithDescription("Roll a new mercenary deserter character!")
+                .AddOption(SubTypeOptionName, ApplicationCommandOptionType.Integer, "1 = Rifleman, 2 = GreatSwordsman, 3 = Grenadier",
+                    minValue:1, maxValue:3, isRequired: true),
             new SlashCommandBuilder()
                 .WithName(NewOpportunistCharacter)
-                .WithDescription("Roll a new opportunist character!"),
+                .WithDescription("Roll a new opportunist character!")
+                .AddOption(SubTypeOptionName, ApplicationCommandOptionType.Integer, "1 = Adventurer, 2 = Sneak Thief, 3 = Silver-Tongued Trickster",
+                    minValue:1, maxValue:3, isRequired: true),
             new SlashCommandBuilder()
                 .WithName(NewPractitionerCharacter)
-                .WithDescription("Roll a new practitioner character!"),
+                .WithDescription("Roll a new practitioner character!")
+                .AddOption(SubTypeOptionName, ApplicationCommandOptionType.Integer, "1 = Vow of War, 2 = Vow of Healing, 3 = Vow of Sustenance",
+                    minValue:1, maxValue:3, isRequired: true),
             new SlashCommandBuilder()
                 .WithName(HelpOptionName)
                 .WithDescription("Explanation and examples"),
@@ -172,39 +179,38 @@ public class DiscordCommandHandler(string token)
         await command.RespondAsync(rollWound, ephemeral: false);
     }
 
-    private static async Task HandleGenericCharacterCreation(SocketSlashCommand command)
-    {
-        var newGenericCharacter = GenericNewCharacterRoller.Roll();
-        await command.RespondAsync(newGenericCharacter, ephemeral: false);
-    }
-
     private static async Task HandleWitchCharacterCreation(SocketSlashCommand command)
     {
-        var newWitchCharacter = WitchCharacterRoller.Roll();
+        var subType = GetSubTypeFromCommand<WitchSubType>(command);
+        var newWitchCharacter = WitchCharacterRoller.Roll(subType);
         await command.RespondAsync(newWitchCharacter, ephemeral: false);
     }
 
     private static async Task HandleBountyHunterCharacterCreation(SocketSlashCommand command)
     {
-        var newBountyHunterCharacter = BountyHunterCharacterRoller.Roll();
+        var subType = GetSubTypeFromCommand<BountyHunterSubType>(command);
+        var newBountyHunterCharacter = BountyHunterCharacterRoller.Roll(subType);
         await command.RespondAsync(newBountyHunterCharacter, ephemeral: false);
     }
 
     private static async Task HandleMercenaryCharacterCreation(SocketSlashCommand command)
     {
-        var newMercenaryDeserter = MercenaryDeserterCharacterRoller.Roll();
+        var subType = GetSubTypeFromCommand<MercenarySubType>(command);
+        var newMercenaryDeserter = MercenaryDeserterCharacterRoller.Roll(subType);
         await command.RespondAsync(newMercenaryDeserter, ephemeral: false);
     }
-
+    
     private static async Task HandleOpportunistCharacterCreation(SocketSlashCommand command)
     {
-        var newOpportunistCharacter = OpportunistCharacterRoller.Roll();
+        var subType = GetSubTypeFromCommand<OpportunistSubType>(command);
+        var newOpportunistCharacter = OpportunistCharacterRoller.Roll(subType);
         await command.RespondAsync(newOpportunistCharacter, ephemeral: false);
     }
 
     private static async Task HandlePractitionerCharacterCreation(SocketSlashCommand command)
     {
-        var newPractitionerCharacter = PractitionerCharacterRoller.Roll();
+        var subType = GetSubTypeFromCommand<PractitionerSubType>(command);
+        var newPractitionerCharacter = PractitionerCharacterRoller.Roll(subType);
         await command.RespondAsync(newPractitionerCharacter, ephemeral: false);
     }
 
@@ -212,5 +218,11 @@ public class DiscordCommandHandler(string token)
     {
         var helpMessage = Messages.GetHelpMessage();
         await command.RespondAsync(helpMessage, ephemeral: true);
+    }
+
+    private static T GetSubTypeFromCommand<T>(SocketSlashCommand command)
+    {
+        var socketSlashCommandDataOption = Convert.ToInt32(command.Data.Options.First().Value);
+        return (T)Enum.ToObject(typeof(T), socketSlashCommandDataOption);
     }
 }

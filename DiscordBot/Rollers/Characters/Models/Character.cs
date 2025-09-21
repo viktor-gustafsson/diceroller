@@ -17,5 +17,6 @@ public class Character
     public required int Toughness { get; init; }
     public required string ClassSpecificEvent { get; init; }
     public required string ArcheTypeSpecificInfo { get; init; }
-    
+    public string SubTypeSpecificInfo { get; set; } = "";
+
 }

@@ -1,3 +1,5 @@
+using DiscordBot.Rollers.Enums;
+
 namespace DiscordBot.Rollers.Characters;
 
 public abstract class BountyHunterCharacterRoller : NewCharacterRollerBase
@@ -12,7 +14,56 @@ public abstract class BountyHunterCharacterRoller : NewCharacterRollerBase
         [6] = "The warm touch of their hand on a cold winter's night.",
     };
 
-    public static string Roll()
+    private static readonly Dictionary<BountyHunterSubType, string> SubTypeInformation = new()
+    {
+        [BountyHunterSubType.Pistolier] =
+            "🔫 PISTOLIER\n\n" +
+            "Some bounties are for soldiers and mercenaries who wear the best\n" +
+            "armour they can find. A pistol shot cares nothing for such defenses.\n\n" +
+            "🎯 Special Ability:\n" +
+            "You may reroll a misfire dice but you must keep the\n" +
+            "second roll.\n\n" +
+            "🎒 Starting Equipment:\n" +
+            "• 2 pistols, 12 shot\n" +
+            "• 2 gunpowder pouches\n" +
+            "• Firearms Repair Kit:\n" +
+            "\tWhile at rest, you may use this handy kit to repair a\n" +
+            "\tdamaged firearm. However, if the weapon is\n" +
+            "\tbroken beyond repair it cannot be salvaged.\n",
+        [BountyHunterSubType.MasterTrapper] =
+            "🪤 MASTER TRAPPER\n\n" +
+            "Honour and glory are lost words to trick the foolish into a 'fair fight'.\n" +
+            "A smart hunter lets their traps do the hard work for them.\n\n" +
+            "🎯 Special Ability:\n" +
+            "To find and make traps is Presence +2.\n\n" +
+            "Setting up a trap takes one round.\n\n" +
+            "🎒 Starting Equipment:\n" +
+            "• Two bear traps\n" +
+            "• Ten caltrops\n" +
+            "• Shovel\n" +
+            "• Hunter's Knife d4\n" +
+            "• Large heavy net\n" +
+            "• Jar of bees\n" +
+            "• Jar of sleep poison\n" +
+            "• Rope 100ft\n",
+        [BountyHunterSubType.BeastHunter] =
+            "🏹 BEAST HUNTER\n\n" +
+            "The wilds hold many creatures, and many of them are dangerous.\n" +
+            "But you are the true peril. You can see the trail of your prey as\n" +
+            "easily as bloody footprints in snow.\n\n" +
+            "🎯 Special Ability:\n" +
+            "All rolls to track a creature's trail is Presence DR8, and you can figure\n" +
+            "out where your prey is going. This includes the Hunting Rules (see\n" +
+            "page 89)\n\n" +
+            "🎒 Starting Equipment:\n" +
+            "• A bow/crossbow with 10 arrows\n" +
+            "• Bait Bag:\n" +
+            "\tThis stinking, musky bag will attract predators both\n" +
+            "\tnatural and demonic. Be careful where you place it.\n" +
+            "• Hunting Knife d4\n",
+    };
+
+    public static string Roll(BountyHunterSubType subType)
     {
         var strength = GetStat(modifier: 1);
         var agility = GetStat(modifier: 0);
@@ -21,12 +72,13 @@ public abstract class BountyHunterCharacterRoller : NewCharacterRollerBase
         var hp = GetHp(toughness: GetAbilityModifier(toughness), modifier: 0, dice: 8);
         var memory = GetMemory();
         var gold = GetGold(numberOfd6: 3);
-        
-        var newCharacterTemplate = GetNewCharacter(strength: strength, agility: agility, presence: presence, toughness: toughness, hp: hp, gold: gold, classSpecificEvent: memory, specificInfo: "");
 
+        var newCharacterTemplate = GetNewCharacter(strength: strength, agility: agility, presence: presence,
+            toughness: toughness, hp: hp, gold: gold, classSpecificEvent: memory, specificInfo: "");
+        newCharacterTemplate.SubTypeSpecificInfo = SubTypeInformation[subType];
         return GetCharacterResponseString(newCharacterTemplate);
     }
-    
+
     private static string GetMemory()
     {
         var random = new Random();

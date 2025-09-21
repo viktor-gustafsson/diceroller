@@ -18,7 +18,7 @@ public abstract class OpportunistCharacterRoller : NewCharacterRollerBase
     {
         var strength = GetStat(modifier: -2);
         var agility = GetStat(modifier: 0);
-        var presence = GetStat(modifier: 2);
+        var presence = GetStat(modifier: 0);
         var toughness = GetStat(modifier: 0);
         var hp = GetHp(toughness: GetAbilityModifier(toughness), modifier: 0, dice: 6);
         var desire = GetDesire();

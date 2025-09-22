@@ -64,7 +64,7 @@ public abstract class NewCharacterRollerBase
     protected static string GetCharacterResponseString(Character character)
     {
         var characterDetails = $"🎲 CHARACTER DETAILS\n\n" +
-                               $"🔧 Additional Skill: {character.AdditionalSkill}\n" +
+                               $"🔧 Additional Skill: {character.AdditionalSkill} (+2 to any roll connected to {character.AdditionalSkill}\n" +
                                $"💖 Passion: {character.Passion}\n" +
                                $"👤 Physical Attribute: {character.PhysicalAttribute}\n" +
                                $"🤝 Party Connection: {character.PartyConnection}\n";

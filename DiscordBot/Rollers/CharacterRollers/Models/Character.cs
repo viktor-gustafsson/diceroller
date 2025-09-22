@@ -1,4 +1,4 @@
-namespace DiscordBot.Rollers.Characters.Models;
+namespace DiscordBot.Rollers.CharacterRollers.Models;
 
 public class Character
 {
@@ -17,6 +17,6 @@ public class Character
     public required int Toughness { get; init; }
     public required string ClassSpecificEvent { get; init; }
     public required string ArcheTypeSpecificInfo { get; init; }
-    public string SubTypeSpecificInfo { get; set; } = "";
+    public required string SubTypeSpecificInfo { get; set; } = "";
 
 }

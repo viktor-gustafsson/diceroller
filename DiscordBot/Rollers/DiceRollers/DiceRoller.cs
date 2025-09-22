@@ -1,9 +1,9 @@
 using System.Text;
+using DiscordBot.Handlers;
 using DiscordBot.Models;
-using DiscordBot.ResponseMessages;
 using DiscordBot.Services;
 
-namespace DiscordBot.Rollers;
+namespace DiscordBot.Rollers.DiceRollers;
 
 public static class DiceRoller
 {
@@ -26,7 +26,7 @@ public static class DiceRoller
                     rollDiceCommand.Rolls[i] = rand.Next(1, rollDiceCommand.DiceType + 1);
                 }
 
-                sb.Append(Messages.GetResultMessage(rollDiceCommand, messageDto.HiddenDice));
+                sb.Append(DiceRollerMessages.GetResultMessage(rollDiceCommand, messageDto.HiddenDice));
             }
                 
             return sb.ToString();

@@ -1,6 +1,7 @@
+using DiscordBot.Rollers.CharacterRollers.Models;
 using DiscordBot.Rollers.Enums;
 
-namespace DiscordBot.Rollers.Characters;
+namespace DiscordBot.Rollers.CharacterRollers;
 
 public abstract class OpportunistCharacterRoller : NewCharacterRollerBase
 {
@@ -88,10 +89,21 @@ public abstract class OpportunistCharacterRoller : NewCharacterRollerBase
         var toughness = GetStat(modifier: 0);
         var hp = GetHp(toughness: GetAbilityModifier(toughness), modifier: 0, dice: 6);
         var desire = GetDesire();
-        var gold = GetGold(2);
+        var gold = GetGold(numberOfd6: 2);
 
-        var newCharacterTemplate = GetNewCharacter(strength: strength, agility: agility, presence: presence, toughness: toughness, hp: hp, gold: gold, classSpecificEvent: desire, specificInfo: Info);
-        newCharacterTemplate.SubTypeSpecificInfo = SubTypeInformation[subType];
+        var newCharacterDto = new NewCharacterDto
+        {
+            Strength = strength,
+            Agility = agility,
+            Presence = presence,
+            Toughness = toughness,
+            Hp = hp,
+            ClassSpecificEvent = desire,
+            SpecificInfo = Info,
+            Gold = gold,
+            SubTypeSpecificInfo = SubTypeInformation[subType],
+        };
+        var newCharacterTemplate = GetNewCharacter(newCharacterDto);
 
         return GetCharacterResponseString(newCharacterTemplate);
     }

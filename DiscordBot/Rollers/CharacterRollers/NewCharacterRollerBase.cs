@@ -1,16 +1,16 @@
-using DiscordBot.Rollers.Characters.Models;
+using DiscordBot.Rollers.CharacterRollers.Models;
 
-namespace DiscordBot.Rollers.Characters;
+namespace DiscordBot.Rollers.CharacterRollers;
 
 public abstract class NewCharacterRollerBase
 {
+    private static readonly Random Random = new();
     protected static int GetGold(int numberOfd6)
     {
-        var random = new Random();
         var sum = 0;
         for (var i = 0; i < numberOfd6; i++)
         {
-            sum += random.Next(1, 7) * 10;
+            sum += Random.Next(1, 7) * 10;
         }
 
         return sum;
@@ -18,8 +18,7 @@ public abstract class NewCharacterRollerBase
     protected static int GetAbilityModifier(int abilityScore) => Lists.AbilityModifiers[abilityScore];
     protected static int GetHp(int toughness, int modifier, int dice)
     {
-        var random = new Random();
-        var diceResult = random.Next(1,dice + 1);
+        var diceResult = Random.Next(1,dice + 1);
         var hp = diceResult+toughness+modifier;
         
         return hp < 1 ? 1 : hp;
@@ -27,37 +26,35 @@ public abstract class NewCharacterRollerBase
     
     protected static int GetStat(int modifier = 0)
     {
-        var random = new Random();
         var sum = 0;
         for (var i = 0; i < 3; i++)
         {
-            sum += random.Next(1,7);
+            sum += Random.Next(1,7);
         }
 
         return sum + modifier;
     }
 
-    protected static Character GetNewCharacter(int strength, int agility, int presence, int toughness, int hp, int gold, string classSpecificEvent, string specificInfo)
+    protected static Character GetNewCharacter(NewCharacterDto newCharacterDto)
     {
-        var random = new Random();
-
         return new Character
         {
-            Type = Lists.CharacterTypes[random.Next(1, 11)],
-            Wants = Lists.CharacterWants[random.Next(1, 11)],
-            SetBack = Lists.CharacterSetbacks[random.Next(1, 11)],
-            AdditionalSkill = Lists.AdditionalSkills[random.Next(1, 21)],
-            Passion = Lists.Passions[random.Next(1, 21)],
-            PhysicalAttribute = Lists.PhysicalAttributes[random.Next(1, 21)],
-            PartyConnection = Lists.PartyConnections[random.Next(1, 21)],
-            Agility = agility,
-            Presence = presence,
-            Strength = strength,
-            Toughness = toughness,
-            Gold = gold,
-            Hp = hp,
-            ClassSpecificEvent = classSpecificEvent,
-            ArcheTypeSpecificInfo = specificInfo,
+            Type = Lists.CharacterTypes[Random.Next(1, 11)],
+            Wants = Lists.CharacterWants[Random.Next(1, 11)],
+            SetBack = Lists.CharacterSetbacks[Random.Next(1, 11)],
+            AdditionalSkill = Lists.AdditionalSkills[Random.Next(1, 21)],
+            Passion = Lists.Passions[Random.Next(1, 21)],
+            PhysicalAttribute = Lists.PhysicalAttributes[Random.Next(1, 21)],
+            PartyConnection = Lists.PartyConnections[Random.Next(1, 21)],
+            Agility = newCharacterDto.Agility,
+            Presence = newCharacterDto.Presence,
+            Strength = newCharacterDto.Strength,
+            Toughness = newCharacterDto.Toughness,
+            Gold = newCharacterDto.Gold,
+            Hp = newCharacterDto.Hp,
+            ClassSpecificEvent = newCharacterDto.ClassSpecificEvent,
+            ArcheTypeSpecificInfo = newCharacterDto.SpecificInfo,
+            SubTypeSpecificInfo = newCharacterDto.SubTypeSpecificInfo,
         };
     }
 

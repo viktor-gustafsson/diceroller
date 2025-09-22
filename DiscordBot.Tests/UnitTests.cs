@@ -1,5 +1,5 @@
 using DiscordBot.Models;
-using DiscordBot.ResponseMessages;
+using DiscordBot.Rollers.DiceRollers;
 using DiscordBot.Services;
 using Shouldly;
 
@@ -124,7 +124,7 @@ public class MessagesFormattingTests
         };
 
         // Act
-        var msg = Messages.GetResultMessage(roll, false);
+        var msg = DiceRollerMessages.GetResultMessage(roll, false);
 
         // Assert (structure and key content, not exact formatting)
         msg.ShouldContain("```");
@@ -167,7 +167,7 @@ public class MessagesFormattingTests
         };
 
         // Act
-        var msg = Messages.GetResultMessage(roll, false);
+        var msg = DiceRollerMessages.GetResultMessage(roll, false);
 
         // Assert
         msg.ShouldContain("```");
@@ -186,7 +186,7 @@ public class MessagesFormattingTests
     public void HelpMessage_Contains_CoreSections()
     {
         // Act
-        var help = Messages.GetHelpMessage();
+        var help = DiceRollerMessages.GetHelpMessage();
 
         // Assert
         help.ShouldContain("Basic Command");

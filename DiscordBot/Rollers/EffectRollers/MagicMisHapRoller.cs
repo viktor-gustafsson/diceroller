@@ -1,4 +1,4 @@
-namespace DiscordBot.Rollers;
+namespace DiscordBot.Rollers.EffectRollers;
 
 public abstract class MagicMisHapRoller
 {

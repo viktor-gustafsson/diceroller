@@ -105,7 +105,7 @@ public abstract class WitchCharacterRoller : NewCharacterRollerBase
             Toughness = toughness,
             Hp = hp,
             ClassSpecificEvent = runningFrom,
-            SpecificInfo = "",
+            SpecificInfo = Info,
             Gold = gold,
             SubTypeSpecificInfo = SubTypeInformation[subType],
         };

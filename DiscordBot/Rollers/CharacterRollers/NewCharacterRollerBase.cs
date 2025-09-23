@@ -39,13 +39,13 @@ public abstract class NewCharacterRollerBase
     {
         return new Character
         {
-            Type = Lists.CharacterTypes[Random.Next(1, 11)],
-            Wants = Lists.CharacterWants[Random.Next(1, 11)],
-            SetBack = Lists.CharacterSetbacks[Random.Next(1, 11)],
-            AdditionalSkill = Lists.AdditionalSkills[Random.Next(1, 21)],
-            Passion = Lists.Passions[Random.Next(1, 21)],
-            PhysicalAttribute = Lists.PhysicalAttributes[Random.Next(1, 21)],
-            PartyConnection = Lists.PartyConnections[Random.Next(1, 21)],
+            Type = Lists.CharacterTypes[Random.Next(1, Lists.CharacterTypes.Count + 1)],
+            Wants = Lists.CharacterWants[Random.Next(1, Lists.CharacterWants.Count + 1)],
+            SetBack = Lists.CharacterSetbacks[Random.Next(1, Lists.CharacterSetbacks.Count + 1)],
+            AdditionalSkill = Lists.AdditionalSkills[Random.Next(1, Lists.AdditionalSkills.Count + 1)],
+            Passion = Lists.Passions[Random.Next(1, Lists.Passions.Count + 1)],
+            PhysicalAttribute = Lists.PhysicalAttributes[Random.Next(1, Lists.PhysicalAttributes.Count + 1)],
+            PartyConnection = Lists.PartyConnections[Random.Next(1, Lists.PartyConnections.Count + 1)],
             Agility = newCharacterDto.Agility,
             Presence = newCharacterDto.Presence,
             Strength = newCharacterDto.Strength,
@@ -61,7 +61,7 @@ public abstract class NewCharacterRollerBase
     protected static string GetCharacterResponseString(Character character)
     {
         var characterDetails = $"🎲 CHARACTER DETAILS\n\n" +
-                               $"🔧 Additional Skill: {character.AdditionalSkill}\n" +
+                               $"🔧 Additional Skill: {character.AdditionalSkill} (+2 to any roll connected to {character.AdditionalSkill})\n" +
                                $"💖 Passion: {character.Passion}\n" +
                                $"👤 Physical Attribute: {character.PhysicalAttribute}\n" +
                                $"🤝 Party Connection: {character.PartyConnection}\n";

@@ -1,4 +1,4 @@
-namespace DiscordBot.Rollers.Characters;
+namespace DiscordBot.Rollers.CharacterRollers;
 
 public static class Lists
 {

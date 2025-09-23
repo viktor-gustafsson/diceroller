@@ -1,6 +1,7 @@
+using DiscordBot.Rollers.CharacterRollers.Models;
 using DiscordBot.Rollers.Enums;
 
-namespace DiscordBot.Rollers.Characters;
+namespace DiscordBot.Rollers.CharacterRollers;
 
 public abstract class MercenaryDeserterCharacterRoller : NewCharacterRollerBase
 {
@@ -70,9 +71,19 @@ public abstract class MercenaryDeserterCharacterRoller : NewCharacterRollerBase
         var memory = GetMemory();
         var gold = GetGold(numberOfd6: 2);
 
-        var newCharacterTemplate = GetNewCharacter(strength: strength, agility: agility, presence: presence,
-            toughness: toughness, hp: hp, gold: gold, classSpecificEvent: memory, specificInfo: Info);
-        newCharacterTemplate.SubTypeSpecificInfo = SubTypeInformation[subType];
+        var newCharacterDto = new NewCharacterDto
+        {
+            Strength = strength,
+            Agility = agility,
+            Presence = presence,
+            Toughness = toughness,
+            Hp = hp,
+            ClassSpecificEvent = memory,
+            SpecificInfo = Info,
+            Gold = gold,
+            SubTypeSpecificInfo = SubTypeInformation[subType],
+        };
+        var newCharacterTemplate = GetNewCharacter(newCharacterDto);
 
         return GetCharacterResponseString(newCharacterTemplate);
     }

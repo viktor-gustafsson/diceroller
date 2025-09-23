@@ -2,9 +2,10 @@ using Discord;
 using Discord.Net;
 using Discord.WebSocket;
 using DiscordBot.Models;
-using DiscordBot.ResponseMessages;
 using DiscordBot.Rollers;
-using DiscordBot.Rollers.Characters;
+using DiscordBot.Rollers.CharacterRollers;
+using DiscordBot.Rollers.DiceRollers;
+using DiscordBot.Rollers.EffectRollers;
 using DiscordBot.Rollers.Enums;
 
 namespace DiscordBot.Handlers;
@@ -216,7 +217,7 @@ public class DiscordCommandHandler(string token)
 
     private static async Task HandleHelp(SocketSlashCommand command)
     {
-        var helpMessage = Messages.GetHelpMessage();
+        var helpMessage = DiceRollerMessages.GetHelpMessage();
         await command.RespondAsync(helpMessage, ephemeral: true);
     }
 

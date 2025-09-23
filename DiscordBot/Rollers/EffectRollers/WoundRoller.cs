@@ -1,6 +1,6 @@
-namespace DiscordBot.Rollers;
+namespace DiscordBot.Rollers.EffectRollers;
 
-public class WoundRoller
+public abstract class WoundRoller
 {
     private static readonly Dictionary<int, string> Wounds = new()
     {

@@ -1,8 +1,8 @@
 using DiscordBot.Models;
 
-namespace DiscordBot.ResponseMessages;
+namespace DiscordBot.Rollers.DiceRollers;
 
-public static class Messages
+public static class DiceRollerMessages
 {
     public static string GetResultMessage(RollDiceCommand rollDiceCommand, bool hiddenRoll)
     {

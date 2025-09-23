@@ -4,13 +4,12 @@ namespace DiscordBot.Rollers.CharacterRollers;
 
 public abstract class NewCharacterRollerBase
 {
-    private static readonly Random Random = Random.Shared;
     protected static int GetGold(int numberOfd6)
     {
         var sum = 0;
         for (var i = 0; i < numberOfd6; i++)
         {
-            sum += Random.Next(1, 7) * 10;
+            sum += Random.Shared.Next(1, 7) * 10;
         }
 
         return sum;
@@ -18,7 +17,7 @@ public abstract class NewCharacterRollerBase
     protected static int GetAbilityModifier(int abilityScore) => Lists.AbilityModifiers[abilityScore];
     protected static int GetHp(int toughness, int modifier, int dice)
     {
-        var diceResult = Random.Next(1,dice + 1);
+        var diceResult = Random.Shared.Next(1,dice + 1);
         var hp = diceResult+toughness+modifier;
         
         return hp < 1 ? 1 : hp;
@@ -29,7 +28,7 @@ public abstract class NewCharacterRollerBase
         var sum = 0;
         for (var i = 0; i < 3; i++)
         {
-            sum += Random.Next(1,7);
+            sum += Random.Shared.Next(1,7);
         }
 
         return sum + modifier;
@@ -39,13 +38,13 @@ public abstract class NewCharacterRollerBase
     {
         return new Character
         {
-            Type = Lists.CharacterTypes[Random.Next(1, Lists.CharacterTypes.Count + 1)],
-            Wants = Lists.CharacterWants[Random.Next(1, Lists.CharacterWants.Count + 1)],
-            SetBack = Lists.CharacterSetbacks[Random.Next(1, Lists.CharacterSetbacks.Count + 1)],
-            AdditionalSkill = Lists.AdditionalSkills[Random.Next(1, Lists.AdditionalSkills.Count + 1)],
-            Passion = Lists.Passions[Random.Next(1, Lists.Passions.Count + 1)],
-            PhysicalAttribute = Lists.PhysicalAttributes[Random.Next(1, Lists.PhysicalAttributes.Count + 1)],
-            PartyConnection = Lists.PartyConnections[Random.Next(1, Lists.PartyConnections.Count + 1)],
+            Type = Lists.CharacterTypes[Random.Shared.Next(1, Lists.CharacterTypes.Count + 1)],
+            Wants = Lists.CharacterWants[Random.Shared.Next(1, Lists.CharacterWants.Count + 1)],
+            SetBack = Lists.CharacterSetbacks[Random.Shared.Next(1, Lists.CharacterSetbacks.Count + 1)],
+            AdditionalSkill = Lists.AdditionalSkills[Random.Shared.Next(1, Lists.AdditionalSkills.Count + 1)],
+            Passion = Lists.Passions[Random.Shared.Next(1, Lists.Passions.Count + 1)],
+            PhysicalAttribute = Lists.PhysicalAttributes[Random.Shared.Next(1, Lists.PhysicalAttributes.Count + 1)],
+            PartyConnection = Lists.PartyConnections[Random.Shared.Next(1, Lists.PartyConnections.Count + 1)],
             Agility = newCharacterDto.Agility,
             Presence = newCharacterDto.Presence,
             Strength = newCharacterDto.Strength,

@@ -114,9 +114,5 @@ public abstract class WitchCharacterRoller : NewCharacterRollerBase
         return GetCharacterResponseString(newCharacterTemplate);
     }
     
-    private static string GetRunningFrom()
-    {
-        var random = new Random();
-        return $"You are running from: {RunningFrom[random.Next(1, 7)]}";
-    }
+    private static string GetRunningFrom() => $"You are running from: {RunningFrom[Random.Shared.Next(1, 7)]}";
 }

@@ -20,10 +20,9 @@ public static class DiceRoller
                     return ErrorMessages.InvalidRollCommand;
 
                 // Roll the dice
-                var rand = new Random();
                 for (var i = 0; i < rollDiceCommand.DiceCount; i++)
                 {
-                    rollDiceCommand.Rolls[i] = rand.Next(1, rollDiceCommand.DiceType + 1);
+                    rollDiceCommand.Rolls[i] = Random.Shared.Next(1, rollDiceCommand.DiceType + 1);
                 }
 
                 sb.Append(DiceRollerMessages.GetResultMessage(rollDiceCommand, messageDto.HiddenDice));

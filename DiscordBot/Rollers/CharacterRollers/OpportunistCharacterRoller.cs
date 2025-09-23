@@ -108,9 +108,5 @@ public abstract class OpportunistCharacterRoller : NewCharacterRollerBase
         return GetCharacterResponseString(newCharacterTemplate);
     }
     
-    private static string GetDesire()
-    {
-        var random = new Random();
-        return $"You desire more than anything: {Desires[random.Next(1, 7)]}";
-    }
+    private static string GetDesire() => $"You desire more than anything: {Desires[Random.Shared.Next(1, 7)]}";
 }

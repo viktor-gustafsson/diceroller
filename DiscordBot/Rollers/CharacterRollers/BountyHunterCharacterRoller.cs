@@ -90,9 +90,5 @@ public abstract class BountyHunterCharacterRoller : NewCharacterRollerBase
         return GetCharacterResponseString(newCharacterTemplate);
     }
 
-    private static string GetMemory()
-    {
-        var random = new Random();
-        return $"You will always remember: {Memories[random.Next(1, 7)]}";
-    }
+    private static string GetMemory() => $"You will always remember: {Memories[Random.Shared.Next(1, 7)]}";
 }

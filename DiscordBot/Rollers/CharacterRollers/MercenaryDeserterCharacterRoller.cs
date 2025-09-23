@@ -88,9 +88,6 @@ public abstract class MercenaryDeserterCharacterRoller : NewCharacterRollerBase
         return GetCharacterResponseString(newCharacterTemplate);
     }
 
-    private static string GetMemory()
-    {
-        var random = new Random();
-        return $"You saw something that will haunt you forever: {Memories[random.Next(1, 7)]}";
-    }
+    private static string GetMemory() =>
+        $"You saw something that will haunt you forever: {Memories[Random.Shared.Next(1, 7)]}";
 }

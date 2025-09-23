@@ -28,8 +28,7 @@ public abstract class MagicMisHapRoller
     
     public static string Roll()
     {
-        var random = new Random();
-        var d20 = random.Next(1, 21);
+        var d20 = Random.Shared.Next(1, 21);
 
         return
             $"```🎲 MAGIC MISHAP ROLL 🎲\nD20: {d20}\n\n🔮 MAGIC GOES AWRY 🔮\nThe arcane energies twist and corrupt...\n\n🌙 MAGICAL MISHAP:\n\n>>> {MagicMishaps[d20]} <<<\n\nThe consequences of dabbling in dark magic manifest.```";

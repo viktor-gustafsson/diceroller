@@ -18,8 +18,7 @@ public abstract class WoundRoller
 
     public static string Roll()
     {
-        var rand = new Random();
-        var d10 = rand.Next(1, 11);
+        var d10 = Random.Shared.Next(1, 11);
 
         return
             $"```🎲 WOUND ROLL 🎲\nD10: {d10}\n\n⚔️ THE BATTLEFIELD TAKES ITS TOLL ⚔️\nYour body bears the scars of combat...\n\n🩸 WOUND SUSTAINED:\n\n>>> {Wounds[d10]} <<<\n\nThe injury will serve as a reminder of this battle.```";

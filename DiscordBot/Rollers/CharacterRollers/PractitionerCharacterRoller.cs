@@ -121,9 +121,5 @@ public abstract class PractitionerCharacterRoller : NewCharacterRollerBase
         return GetCharacterResponseString(newCharacterTemplate);
     }
     
-    private static string GetSecret()
-    {
-        var random = new Random();
-        return $"You have a secret: {Secrets[random.Next(1, 7)]}";
-    }
+    private static string GetSecret() => $"You have a secret: {Secrets[Random.Shared.Next(1, 7)]}";
 }

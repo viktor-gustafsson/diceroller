@@ -28,9 +28,8 @@ public static class DevilsLuckRoller
 
     public static string Roll()
     {
-        var rand = new Random();
-        var d6 = rand.Next(1,7);
-        var d20 = rand.Next(1, 21);
+        var d6 = Random.Shared.Next(1,7);
+        var d20 = Random.Shared.Next(1, 21);
 
         return d6 == 1
             ? $"```🎲 DEVIL'S LUCK ROLL 🎲\nD6: {d6} | D20: {d20}\n\n⚖️ A DEVIL'S BARGAIN ⚖️\nThe figure with the ledger marks something in their book with a knowing smile...\n\n🔥 THE COST OF YOUR SECOND CHANCE MANIFESTS:\n\n>>> {Effects[d20]} <<<\n\nThe transformation begins... there is no going back.```"

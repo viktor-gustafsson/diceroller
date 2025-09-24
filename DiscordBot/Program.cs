@@ -1,5 +1,4 @@
 ﻿using DiscordBot.Handlers;
-using DiscordBot.Services;
 
 var discordBotToken = Environment.GetEnvironmentVariable("DISCORD_BOT_TOKEN");
 

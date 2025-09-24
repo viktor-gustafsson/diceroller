@@ -2,7 +2,6 @@ using Discord;
 using Discord.Net;
 using Discord.WebSocket;
 using DiscordBot.Models;
-using DiscordBot.Rollers;
 using DiscordBot.Rollers.CharacterRollers;
 using DiscordBot.Rollers.DiceRollers;
 using DiscordBot.Rollers.EffectRollers;
@@ -87,7 +86,7 @@ public class DiscordCommandHandler(string token)
                     isRequired: true),
             new SlashCommandBuilder()
                 .WithName(RollOptionDevilsLuckName)
-                .WithDescription("Roll devils luck!"),
+                .WithDescription("Roll devil's luck!"),
             new SlashCommandBuilder()
                 .WithName(RollOptionWoundName)
                 .WithDescription("Roll wound!"),

@@ -40,5 +40,4 @@ public static class DiceRollParser
 
         return rollDiceCommands;
     } 
-    
 }

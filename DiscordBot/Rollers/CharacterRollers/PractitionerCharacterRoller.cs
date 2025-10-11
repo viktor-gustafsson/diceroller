@@ -1,5 +1,5 @@
+using DiscordBot.Rollers.CharacterRollers.Enums;
 using DiscordBot.Rollers.CharacterRollers.Models;
-using DiscordBot.Rollers.Enums;
 
 namespace DiscordBot.Rollers.CharacterRollers;
 
@@ -121,5 +121,5 @@ public abstract class PractitionerCharacterRoller : NewCharacterRollerBase
         return GetCharacterResponseString(newCharacterTemplate);
     }
     
-    private static string GetSecret() => $"You have a secret: {Secrets[Random.Shared.Next(1, 7)]}";
+    private static string GetSecret() => $"You have a secret: {Secrets[Random.Shared.Next(1, Secrets.Count + 1)]}";
 }

@@ -1,5 +1,5 @@
+using DiscordBot.Rollers.CharacterRollers.Enums;
 using DiscordBot.Rollers.CharacterRollers.Models;
-using DiscordBot.Rollers.Enums;
 
 namespace DiscordBot.Rollers.CharacterRollers;
 
@@ -108,5 +108,5 @@ public abstract class OpportunistCharacterRoller : NewCharacterRollerBase
         return GetCharacterResponseString(newCharacterTemplate);
     }
     
-    private static string GetDesire() => $"You desire more than anything: {Desires[Random.Shared.Next(1, 7)]}";
+    private static string GetDesire() => $"You desire more than anything: {Desires[Random.Shared.Next(1, Desires.Count + 1)]}";
 }

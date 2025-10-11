@@ -1,5 +1,5 @@
+using DiscordBot.Rollers.CharacterRollers.Enums;
 using DiscordBot.Rollers.CharacterRollers.Models;
-using DiscordBot.Rollers.Enums;
 
 namespace DiscordBot.Rollers.CharacterRollers;
 
@@ -89,5 +89,5 @@ public abstract class MercenaryDeserterCharacterRoller : NewCharacterRollerBase
     }
 
     private static string GetMemory() =>
-        $"You saw something that will haunt you forever: {Memories[Random.Shared.Next(1, 7)]}";
+        $"You saw something that will haunt you forever: {Memories[Random.Shared.Next(1, Memories.Count + 1)]}";
 }

@@ -1,5 +1,5 @@
+using DiscordBot.Rollers.CharacterRollers.Enums;
 using DiscordBot.Rollers.CharacterRollers.Models;
-using DiscordBot.Rollers.Enums;
 
 namespace DiscordBot.Rollers.CharacterRollers;
 
@@ -114,5 +114,5 @@ public abstract class WitchCharacterRoller : NewCharacterRollerBase
         return GetCharacterResponseString(newCharacterTemplate);
     }
     
-    private static string GetRunningFrom() => $"You are running from: {RunningFrom[Random.Shared.Next(1, 7)]}";
+    private static string GetRunningFrom() => $"You are running from: {RunningFrom[Random.Shared.Next(1, RunningFrom.Count + 1)]}";
 }

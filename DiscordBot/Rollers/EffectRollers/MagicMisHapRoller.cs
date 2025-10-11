@@ -28,9 +28,9 @@ public abstract class MagicMisHapRoller
     
     public static string Roll()
     {
-        var d20 = Random.Shared.Next(1, 21);
+        var dice = Random.Shared.Next(1, MagicMishaps.Count + 1);
 
         return
-            $"```🎲 MAGIC MISHAP ROLL 🎲\nD20: {d20}\n\n🔮 MAGIC GOES AWRY 🔮\nThe arcane energies twist and corrupt...\n\n🌙 MAGICAL MISHAP:\n\n>>> {MagicMishaps[d20]} <<<\n\nThe consequences of dabbling in dark magic manifest.```";
+            $"```🎲 MAGIC MISHAP ROLL 🎲\nResult: {dice}\n\n🔮 MAGIC GOES AWRY 🔮\nThe arcane energies twist and corrupt...\n\n🌙 MAGICAL MISHAP:\n\n>>> {MagicMishaps[dice]} <<<\n\nThe consequences of dabbling in dark magic manifest.```";
     }
 }

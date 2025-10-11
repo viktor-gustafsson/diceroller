@@ -3,9 +3,9 @@ using Discord.Net;
 using Discord.WebSocket;
 using DiscordBot.Models;
 using DiscordBot.Rollers.CharacterRollers;
+using DiscordBot.Rollers.CharacterRollers.Enums;
 using DiscordBot.Rollers.DiceRollers;
 using DiscordBot.Rollers.EffectRollers;
-using DiscordBot.Rollers.Enums;
 
 namespace DiscordBot.Handlers;
 

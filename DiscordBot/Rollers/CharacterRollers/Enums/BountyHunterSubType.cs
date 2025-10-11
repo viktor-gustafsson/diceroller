@@ -1,4 +1,4 @@
-namespace DiscordBot.Rollers.Enums;
+namespace DiscordBot.Rollers.CharacterRollers.Enums;
 
 public enum BountyHunterSubType
 {

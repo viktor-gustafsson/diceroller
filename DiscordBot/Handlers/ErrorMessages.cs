@@ -7,5 +7,4 @@ public static class ErrorMessages
 
     public static string FallbackErrorMessage
         => "I'm sorry, I don't know what to do.";
-
 }

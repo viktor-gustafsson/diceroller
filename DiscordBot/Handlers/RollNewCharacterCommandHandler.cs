@@ -6,10 +6,11 @@ namespace DiscordBot.Handlers;
 
 public abstract class RollNewCharacterCommandHandler
 {
-    public static async Task Roll<T, TK>(SocketSlashCommand command) where T : ICharacterRoller<TK> where TK : Enum
+    public static async Task Roll<TCharacterRoller, TKSubType>(SocketSlashCommand command)
+        where TCharacterRoller : ICharacterRoller<TKSubType> where TKSubType : Enum
     {
-        var subType = CharacterSubTypeParser.Parse<TK>(command);
-        var newBountyHunterCharacter = T.Roll(subType);
-        await command.RespondAsync(newBountyHunterCharacter, ephemeral: false);
+        var subType = CharacterSubTypeParser.Parse<TKSubType>(command);
+        var character = TCharacterRoller.Roll(subType);
+        await command.RespondAsync(character, ephemeral: false);
     }
 }

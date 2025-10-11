@@ -3,7 +3,7 @@ using DiscordBot.Rollers.CharacterRollers.Models;
 
 namespace DiscordBot.Rollers.CharacterRollers;
 
-public abstract class BountyHunterCharacterRoller : NewCharacterRollerBase
+public abstract class BountyHunterCharacterRoller : NewCharacterRollerBase, ICharacterRoller<BountyHunterSubType>
 {
     private static readonly Dictionary<int, string> Memories = new()
     {

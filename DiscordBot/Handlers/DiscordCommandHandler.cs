@@ -1,9 +1,14 @@
 using Discord;
 using Discord.Net;
 using Discord.WebSocket;
-using DiscordBot.Handlers.CharacterCreationHandlers;
 using DiscordBot.Handlers.DiceHandlers;
-using DiscordBot.Handlers.EffectHandlers;
+using DiscordBot.Rollers;
+using DiscordBot.Rollers.CharacterRollers;
+using DiscordBot.Rollers.CharacterRollers.Enums;
+using DiscordBot.Rollers.CharacterRollers.Models;
+using DiscordBot.Rollers.DiceRollers;
+using DiscordBot.Rollers.EffectRollers;
+using DiscordBot.Rollers.EffectRollers.Types;
 
 namespace DiscordBot.Handlers;
 
@@ -18,14 +23,14 @@ public class DiscordCommandHandler(string token)
     {
         [Constants.RollOptionName] = DiceRollCommandHandler.Handle,
         [Constants.RollOptionHiddenName] = HiddenDiceRollCommandHandler.Handle,
-        [Constants.RollOptionDevilsLuckName] = DevilsLuckCommandHandler.Handle,
-        [Constants.RollOptionWoundName] = WoundCommandHandler.Handle,
-        [Constants.RollOptionMagicMisHapName] = MagicMisHapCommandHandler.Handle,
-        [Constants.NewWitchCharacter] = WitchCharacterCreationCommandHandler.Handle,
-        [Constants.NewBountyHunterCharacter] = BountyHunterCharacterCreationCommandHandler.Handle,
-        [Constants.NewMercenaryCharacter] = MercenaryCharacterCommandHandler.Handle,
-        [Constants.NewOpportunistCharacter] = OpportunistCharacterCommandHandler.Handle,
-        [Constants.NewPractitionerCharacter] = PractitionerCharacterCommandHandler.Handle,
+        [Constants.RollOptionDevilsLuckName] = EffectRollCommandHandler.Handle<DevilsLuckRoller>,
+        [Constants.RollOptionWoundName] = EffectRollCommandHandler.Handle<WoundRoller>,
+        [Constants.RollOptionMagicMisHapName] = EffectRollCommandHandler.Handle<MagicMisHapRoller>,
+        [Constants.NewWitchCharacter] = RollNewCharacterCommandHandler.Roll<WitchCharacterRoller, WitchSubType>,
+        [Constants.NewBountyHunterCharacter] = RollNewCharacterCommandHandler.Roll<BountyHunterCharacterRoller, BountyHunterSubType>,
+        [Constants.NewMercenaryCharacter] = RollNewCharacterCommandHandler.Roll<MercenaryDeserterCharacterRoller, MercenarySubType>,
+        [Constants.NewOpportunistCharacter] = RollNewCharacterCommandHandler.Roll<OpportunistCharacterRoller, OpportunistSubType>,
+        [Constants.NewPractitionerCharacter] = RollNewCharacterCommandHandler.Roll<PractitionerCharacterRoller, PractitionerSubType>,
         [Constants.HelpOptionName] = HelpCommandHandler.Handle,
     };
 

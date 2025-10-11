@@ -3,7 +3,7 @@ using DiscordBot.Rollers.CharacterRollers.Models;
 
 namespace DiscordBot.Rollers.CharacterRollers;
 
-public abstract class WitchCharacterRoller : NewCharacterRollerBase
+public abstract class WitchCharacterRoller : NewCharacterRollerBase, ICharacterRoller<WitchSubType>
 {
     private static readonly Dictionary<int, string> RunningFrom = new()
     {

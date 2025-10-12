@@ -1,6 +1,6 @@
-namespace DiscordBot.Rollers.EffectRollers.Types;
+namespace DiscordBot.Rollers.EffectRollers;
 
-public class MagicMisHapRoller : IEffectRoller
+public abstract class MagicMisHapRoller : IEffectRoller
 {
     private static readonly Dictionary<int, string> MagicMishaps = new()
     {

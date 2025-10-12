@@ -1,6 +1,6 @@
-namespace DiscordBot.Rollers.EffectRollers.Types;
+namespace DiscordBot.Rollers.EffectRollers;
 
-public class DevilsLuckRoller : IEffectRoller
+public abstract class DevilsLuckRoller : IEffectRoller
 {
     private static readonly Dictionary<int, string> Effects = new()
     {

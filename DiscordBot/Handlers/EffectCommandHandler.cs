@@ -5,9 +5,9 @@ namespace DiscordBot.Handlers;
 
 public abstract class EffectCommandHandler
 {
-    public static async Task Handle<T>(SocketSlashCommand command) where T : IEffectRoller
+    public static async Task Handle<TEffectRoller>(SocketSlashCommand command) where TEffectRoller : IEffectRoller
     {
-        var effect = T.Roll();
+        var effect = TEffectRoller.Roll();
         await command.RespondAsync(effect, ephemeral: false);
     }
 }

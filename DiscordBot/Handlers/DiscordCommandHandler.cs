@@ -16,8 +16,8 @@ public class DiscordCommandHandler(string token)
 
     private static readonly Dictionary<string, Func<SocketSlashCommand, bool, Task>> DiceCommandHanders = new()
     {
-        [Constants.RollOptionName] = (command, _) => DiceCommandHandler.Handle(command, false),
-        [Constants.RollOptionHiddenName] = (command, _) => DiceCommandHandler.Handle(command, true),
+        [Constants.RollOptionName] = (command, _) => DiceCommandHandler.Handle(command: command, hidden: false),
+        [Constants.RollOptionHiddenName] = (command, _) => DiceCommandHandler.Handle(command: command, hidden: true),
     };
 
     private static readonly Dictionary<string, Func<SocketSlashCommand, Task>> EffectCommandHandlers = new()

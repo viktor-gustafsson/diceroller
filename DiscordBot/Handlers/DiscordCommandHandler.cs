@@ -36,7 +36,7 @@ public class DiscordCommandHandler(string token)
     {
         [Constants.NewWitchCharacter] = NewCharacterCommandHandler.Roll<WitchCharacterRoller, WitchSubType>,
         [Constants.NewBountyHunterCharacter] = NewCharacterCommandHandler.Roll<BountyHunterCharacterRoller, BountyHunterSubType>,
-        [Constants.NewMercenaryCharacter] = NewCharacterCommandHandler.Roll<MercenaryDeserterCharacterRoller, MercenarySubType>,
+        [Constants.NewMercenaryCharacter] = NewCharacterCommandHandler.Roll<MercenaryCharacterRoller, MercenarySubType>,
         [Constants.NewOpportunistCharacter] = NewCharacterCommandHandler.Roll<OpportunistCharacterRoller, OpportunistSubType>,
         [Constants.NewPractitionerCharacter] = NewCharacterCommandHandler.Roll<PractitionerCharacterRoller, PractitionerSubType>,
     };

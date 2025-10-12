@@ -1,13 +1,8 @@
 using Discord;
 using Discord.Net;
 using Discord.WebSocket;
-using DiscordBot.Handlers.DiceHandlers;
-using DiscordBot.Rollers;
 using DiscordBot.Rollers.CharacterRollers;
 using DiscordBot.Rollers.CharacterRollers.Enums;
-using DiscordBot.Rollers.CharacterRollers.Models;
-using DiscordBot.Rollers.DiceRollers;
-using DiscordBot.Rollers.EffectRollers;
 using DiscordBot.Rollers.EffectRollers.Types;
 
 namespace DiscordBot.Handlers;
@@ -19,27 +14,39 @@ public class DiscordCommandHandler(string token)
         GatewayIntents = GatewayIntents.AllUnprivileged | GatewayIntents.MessageContent,
     });
 
-    private static readonly Dictionary<string, Func<SocketSlashCommand, Task>> CommandHandlers = new()
+    private static readonly Dictionary<string, Func<SocketSlashCommand, bool, Task>> DiceCommandHanders = new()
     {
-        [Constants.RollOptionName] = DiceRollCommandHandler.Handle,
-        [Constants.RollOptionHiddenName] = HiddenDiceRollCommandHandler.Handle,
-        [Constants.RollOptionDevilsLuckName] = EffectRollCommandHandler.Handle<DevilsLuckRoller>,
-        [Constants.RollOptionWoundName] = EffectRollCommandHandler.Handle<WoundRoller>,
-        [Constants.RollOptionMagicMisHapName] = EffectRollCommandHandler.Handle<MagicMisHapRoller>,
-        [Constants.NewWitchCharacter] = RollNewCharacterCommandHandler.Roll<WitchCharacterRoller, WitchSubType>,
-        [Constants.NewBountyHunterCharacter] = RollNewCharacterCommandHandler.Roll<BountyHunterCharacterRoller, BountyHunterSubType>,
-        [Constants.NewMercenaryCharacter] = RollNewCharacterCommandHandler.Roll<MercenaryDeserterCharacterRoller, MercenarySubType>,
-        [Constants.NewOpportunistCharacter] = RollNewCharacterCommandHandler.Roll<OpportunistCharacterRoller, OpportunistSubType>,
-        [Constants.NewPractitionerCharacter] = RollNewCharacterCommandHandler.Roll<PractitionerCharacterRoller, PractitionerSubType>,
+        [Constants.RollOptionName] = (command, _) => DiceCommandHandler.Handle(command, false),
+        [Constants.RollOptionHiddenName] = (command, _) => DiceCommandHandler.Handle(command, true),
+    };
+
+    private static readonly Dictionary<string, Func<SocketSlashCommand, Task>> EffectCommandHandlers = new()
+    {
+        [Constants.RollOptionDevilsLuckName] = EffectCommandHandler.Handle<DevilsLuckRoller>,
+        [Constants.RollOptionWoundName] = EffectCommandHandler.Handle<WoundRoller>,
+        [Constants.RollOptionMagicMisHapName] = EffectCommandHandler.Handle<MagicMisHapRoller>,
+    };
+
+    private static readonly Dictionary<string, Func<SocketSlashCommand, Task>> UtilityCommandHandlers = new()
+    {
         [Constants.HelpOptionName] = HelpCommandHandler.Handle,
+    };
+    
+    private static readonly Dictionary<string, Func<SocketSlashCommand, Task>> CharacterCommandHandlers = new()
+    {
+        [Constants.NewWitchCharacter] = NewCharacterCommandHandler.Roll<WitchCharacterRoller, WitchSubType>,
+        [Constants.NewBountyHunterCharacter] = NewCharacterCommandHandler.Roll<BountyHunterCharacterRoller, BountyHunterSubType>,
+        [Constants.NewMercenaryCharacter] = NewCharacterCommandHandler.Roll<MercenaryDeserterCharacterRoller, MercenarySubType>,
+        [Constants.NewOpportunistCharacter] = NewCharacterCommandHandler.Roll<OpportunistCharacterRoller, OpportunistSubType>,
+        [Constants.NewPractitionerCharacter] = NewCharacterCommandHandler.Roll<PractitionerCharacterRoller, PractitionerSubType>,
     };
 
     public async Task Start()
     {
-        await _client.StartAsync();
         await _client.LoginAsync(TokenType.Bot, token);
+        await _client.StartAsync();
         _client.Ready += ReadyAsync;
-        _client.SlashCommandExecuted += MessageHandler;
+        _client.SlashCommandExecuted += CommandHandler;
         await Task.Delay(-1);
     }
 
@@ -119,15 +126,21 @@ public class DiscordCommandHandler(string token)
         ];
     }
 
-    private static async Task MessageHandler(SocketSlashCommand command)
+    private static async Task CommandHandler(SocketSlashCommand command)
     {
-        if (CommandHandlers.TryGetValue(command.Data.Name, out var handler))
+        var commandHandler = command.Data.Name switch
         {
-            await handler(command);
-        }
-        else
-        {
-            await command.RespondAsync(ErrorMessages.FallbackErrorMessage, ephemeral: true);
-        }
+            var name when CharacterCommandHandlers.TryGetValue(name, out var characterHandler)
+                => characterHandler(command),
+            var name when EffectCommandHandlers.TryGetValue(name, out var effectHandler)
+                => effectHandler(command),
+            var name when DiceCommandHanders.TryGetValue(name, out var diceHandler)
+                => diceHandler(command, name == Constants.RollOptionHiddenName),
+            var name when UtilityCommandHandlers.TryGetValue(name, out var utilityHandler)
+                => utilityHandler(command),
+            _ => command.RespondAsync(ErrorMessages.FallbackErrorMessage, ephemeral: true),
+        };
+
+        await commandHandler;
     }
 }

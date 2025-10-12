@@ -1,6 +1,6 @@
 using Discord.WebSocket;
 
-namespace DiscordBot.Utilities;
+namespace DiscordBot.Parsers;
 
 public static class CharacterSubTypeParser
 {

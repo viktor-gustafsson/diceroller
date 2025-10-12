@@ -3,7 +3,7 @@ using DiscordBot.Rollers.EffectRollers;
 
 namespace DiscordBot.Handlers;
 
-public abstract class EffectRollCommandHandler
+public abstract class EffectCommandHandler
 {
     public static async Task Handle<T>(SocketSlashCommand command) where T : IEffectRoller
     {

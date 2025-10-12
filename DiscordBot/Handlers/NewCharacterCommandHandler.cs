@@ -1,10 +1,10 @@
 using Discord.WebSocket;
+using DiscordBot.Parsers;
 using DiscordBot.Rollers.CharacterRollers;
-using DiscordBot.Utilities;
 
 namespace DiscordBot.Handlers;
 
-public abstract class RollNewCharacterCommandHandler
+public abstract class NewCharacterCommandHandler
 {
     public static async Task Roll<TCharacterRoller, TKSubType>(SocketSlashCommand command)
         where TCharacterRoller : ICharacterRoller<TKSubType> where TKSubType : Enum

@@ -1,7 +1,7 @@
 using System.Text;
 using DiscordBot.Handlers;
 using DiscordBot.Models;
-using DiscordBot.Utilities;
+using DiscordBot.Parsers;
 
 namespace DiscordBot.Rollers.DiceRollers;
 

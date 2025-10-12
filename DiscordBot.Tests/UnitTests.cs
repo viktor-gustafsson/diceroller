@@ -1,6 +1,6 @@
 using DiscordBot.Models;
+using DiscordBot.Parsers;
 using DiscordBot.Rollers.DiceRollers;
-using DiscordBot.Utilities;
 using Shouldly;
 
 namespace DiscordBot.Tests;

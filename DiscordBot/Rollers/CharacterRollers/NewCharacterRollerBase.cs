@@ -41,6 +41,7 @@ public abstract class NewCharacterRollerBase
             Type = Lists.CharacterTypes[Random.Shared.Next(1, Lists.CharacterTypes.Count + 1)],
             Wants = Lists.CharacterWants[Random.Shared.Next(1, Lists.CharacterWants.Count + 1)],
             SetBack = Lists.CharacterSetbacks[Random.Shared.Next(1, Lists.CharacterSetbacks.Count + 1)],
+            Quirk = Lists.CharacterQuirks[Random.Shared.Next(1, Lists.CharacterQuirks.Count + 1)],
             AdditionalSkill = Lists.AdditionalSkills[Random.Shared.Next(1, Lists.AdditionalSkills.Count + 1)],
             Passion = Lists.Passions[Random.Shared.Next(1, Lists.Passions.Count + 1)],
             PhysicalAttribute = Lists.PhysicalAttributes[Random.Shared.Next(1, Lists.PhysicalAttributes.Count + 1)],
@@ -89,6 +90,7 @@ public abstract class NewCharacterRollerBase
                $"🎲 CHARACTER TRAITS\n\n" +
                $"🎭 Character Type: {character.Type}\n" +
                $"💫 Character Wants: {character.Wants}\n" +
+               $"🎪 Character Quirk: {character.Quirk}\n" +
                $"⚠️ Character Setback: {character.SetBack}\n" +
                $"```\n" +
                $"```\n" +

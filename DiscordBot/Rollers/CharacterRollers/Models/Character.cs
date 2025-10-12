@@ -5,6 +5,7 @@ public class Character
     public required string Type { get; init; }
     public required string Wants { get; init; }
     public required string SetBack { get; init; }
+    public required string Quirk { get; init; }
     public required string AdditionalSkill { get; init; }
     public required string Passion { get; init; }
     public required string PhysicalAttribute { get; init; }

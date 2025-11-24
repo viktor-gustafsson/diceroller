@@ -66,6 +66,14 @@ public abstract class NewCharacterRollerBase
                                $"👤 Physical Attribute: {character.PhysicalAttribute}\n" +
                                $"🤝 Party Connection: {character.PartyConnection}\n";
 
+        var commonStartGear =
+                        $"• Satchel\n" +
+                        $"• Water and Rations for 3 days\n" +
+                        $"• Bedroll\n" +
+                        $"• Flint and steel\n" +
+                        $"• 50ft of rope\n" +
+                        $"• 2 torches";
+
         if (!string.IsNullOrEmpty(character.ClassSpecificEvent))
         {
             characterDetails += $"🌟 {character.ClassSpecificEvent}\n";
@@ -78,7 +86,8 @@ public abstract class NewCharacterRollerBase
 
         return $"```\n" +
                $"🎲 NEW CHARACTER STATS\n\n" +
-               $"{character.SubTypeSpecificInfo}\n"+
+               $"{character.SubTypeSpecificInfo}"+
+               $"{commonStartGear}\n\n" +
                $"💪 Strength:  [{GetAbilityModifier(character.Strength),2}]  (Rolled: {character.Strength,2})\n" +
                $"🏃 Agility:   [{GetAbilityModifier(character.Agility),2}]  (Rolled: {character.Agility,2})\n" +
                $"👑 Presence:  [{GetAbilityModifier(character.Presence),2}]  (Rolled: {character.Presence,2})\n" +

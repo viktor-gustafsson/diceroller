@@ -32,7 +32,7 @@ public abstract class OpportunistCharacterRoller : NewCharacterRollerBase, IChar
             "• The Broken Compass:\n" +
             "\tThis compass does not point north,\n" +
             "\tit does however point to the thing\n" +
-            "\tyou most desire.\n\n" +
+            "\tyou most desire.\n" +
             "• Sportsman's Sword d6+2:\n" +
             "\tDR10 to disarm an opponent of\n" +
             "\ttheir held weapon rather than\n" +

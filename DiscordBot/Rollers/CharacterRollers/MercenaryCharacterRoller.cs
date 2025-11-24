@@ -37,11 +37,11 @@ public abstract class MercenaryCharacterRoller : NewCharacterRollerBase, ICharac
             "edge of a blade, but until then your trusty Zweihander will do.\n\n" +
             "🎯 Special Ability:\n" +
             "Zweihander: Roll an extra d4 damage on a successful hit.\n\n" +
-            "🎒 Starting Equipment:\n" +
-            "• Zweihander\n\n" +
             "👑 Flamboyant Clothes:\n" +
             "\tThese garments are a sign of your martial skill and so will\n" +
-            "\tcommand respect amongst other men and women of war.\n",
+            "\tcommand respect amongst other men and women of war.\n\n" +
+            "🎒 Starting Equipment:\n" +
+            "• Zweihander\n",
         [MercenarySubType.Grenadier] =
             "💣 GRENADIER\n\n" +
             "Gunpowder and fire call to your soul, explosions and shockwaves\n" +

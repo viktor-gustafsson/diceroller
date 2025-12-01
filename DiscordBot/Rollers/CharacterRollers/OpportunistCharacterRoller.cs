@@ -78,9 +78,9 @@ public abstract class OpportunistCharacterRoller : NewCharacterRollerBase, IChar
             "\tThe smell of a rose is irresistible to all that smell\n" +
             "\tit. Perfect for those with no time to bathe.\n",
     };
-        
-    private const string Info = "Agility tests are DR10"; 
-    
+
+    private const string Info = "Agility tests are DR10";
+
     public static string Roll(OpportunistSubType subType)
     {
         var strength = GetStat(modifier: -2);
@@ -107,6 +107,6 @@ public abstract class OpportunistCharacterRoller : NewCharacterRollerBase, IChar
 
         return GetCharacterResponseString(newCharacterTemplate);
     }
-    
+
     private static string GetDesire() => $"You desire more than anything: {Desires[Random.Shared.Next(1, Desires.Count + 1)]}";
 }

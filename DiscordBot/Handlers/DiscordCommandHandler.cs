@@ -31,7 +31,7 @@ public class DiscordCommandHandler(string token)
     {
         [Constants.HelpOptionName] = HelpCommandHandler.Handle,
     };
-    
+
     private static readonly Dictionary<string, Func<SocketSlashCommand, Task>> CharacterCommandHandlers = new()
     {
         [Constants.NewWitchCharacter] = NewCharacterCommandHandler.Roll<WitchCharacterRoller, WitchSubType>,

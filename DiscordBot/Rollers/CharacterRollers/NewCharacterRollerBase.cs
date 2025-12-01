@@ -19,10 +19,10 @@ public abstract class NewCharacterRollerBase
     {
         var diceResult = Random.Shared.Next(1,dice + 1);
         var hp = diceResult+toughness+modifier;
-        
+
         return hp < 1 ? 1 : hp;
     }
-    
+
     protected static int GetStat(int modifier = 0)
     {
         var sum = 0;

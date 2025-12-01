@@ -11,7 +11,7 @@ public static class DiceRollerMessages
             $"\n{rollDiceCommand.UserDisplayName}\n{GetHiddenMessage(hiddenRoll)}\n{GetRollingMessage(rollDiceCommand)}\n{GetDiceNumberToKeepMessage(rollDiceCommand)}{GetModifierMessage(rollDiceCommand)}\n{GetRollsMessage(rollDiceCommand)}{GetKeepMessage(rollDiceCommand)}\n{GetSumMessage(rollDiceCommand)}" +
             $"```";
     }
-    
+
     public static string GetHelpMessage() =>
         " \n" +
         "### Basic Command: `/roll [number_of_dice]d[number_of_sides]`\n" +

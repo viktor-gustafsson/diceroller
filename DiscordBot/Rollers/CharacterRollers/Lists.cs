@@ -65,7 +65,7 @@ public static class Lists
         [59] = "Will often repeat a word or phrase as if making sure it's said correctly.",
         [60] = "Will straighten others' clothing or armor without being asked.",
     };
-    
+
     // Called Trait in the new list
     public static readonly Dictionary<int, string> CharacterTypes = new()
     {
@@ -397,26 +397,26 @@ public static class Lists
         [19] = "Dreamt of the other's death.",
         [20] = "Were cursed to keep the other alive.",
     };
-    
+
     public static readonly Dictionary<int, int> AbilityModifiers = new()
     {
-        [1] = -3, 
-        [2] = -3, 
-        [3] = -3, 
+        [1] = -3,
+        [2] = -3,
+        [3] = -3,
         [4] = -3,
-        [5] = -2, 
+        [5] = -2,
         [6] = -2,
-        [7] = -1, 
+        [7] = -1,
         [8] = -1,
-        [9] = 0, 
-        [10] = 0, 
-        [11] = 0, 
+        [9] = 0,
+        [10] = 0,
+        [11] = 0,
         [12] = 0,
-        [13] = 1, 
+        [13] = 1,
         [14] = 1,
-        [15] = 2, 
+        [15] = 2,
         [16] = 2,
-        [17] = 3, 
+        [17] = 3,
         [18] = 3,
     };
 }

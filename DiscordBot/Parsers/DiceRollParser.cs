@@ -21,7 +21,7 @@ public static class DiceRollParser
             }
 
             var parts = command.ToLower().Split('d', 'k', 'h', 'l');
-            
+
             var rollDiceCommand = new RollDiceCommand
             {
                 DiceCount = int.Parse(parts[0]),
@@ -34,10 +34,10 @@ public static class DiceRollParser
                 KeepHigh = !command.Contains('l'),
                 UserDisplayName = messageDto.UserDisplayName,
             };
-            
+
             rollDiceCommands.Add(rollDiceCommand);
         }
 
         return rollDiceCommands;
-    } 
+    }
 }

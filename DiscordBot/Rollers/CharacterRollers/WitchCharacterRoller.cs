@@ -15,7 +15,7 @@ public abstract class WitchCharacterRoller : NewCharacterRollerBase, ICharacterR
         [6] = "Your fate.",
     };
 
-    private const string Info = 
+    private const string Info =
         "You were blessed/cursed with the gifts of the wyrd,\n" +
         "and as such can access great and terrible magics.\n" +
         "But beware, those seen or merely suspected of using magic are more oft than not\n" +
@@ -86,7 +86,7 @@ public abstract class WitchCharacterRoller : NewCharacterRollerBase, ICharacterR
             "\tdivine the future, however the future is always dark\n" +
             "\tand vague.\n",
     };
-    
+
     public static string Roll(WitchSubType subType)
     {
         var strength = GetStat(modifier: -2);
@@ -113,6 +113,6 @@ public abstract class WitchCharacterRoller : NewCharacterRollerBase, ICharacterR
 
         return GetCharacterResponseString(newCharacterTemplate);
     }
-    
+
     private static string GetRunningFrom() => $"You are running from: {RunningFrom[Random.Shared.Next(1, RunningFrom.Count + 1)]}";
 }

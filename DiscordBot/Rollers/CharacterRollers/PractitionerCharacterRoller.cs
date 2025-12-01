@@ -93,7 +93,7 @@ public abstract class PractitionerCharacterRoller : NewCharacterRollerBase, ICha
             "• Enough bowls for the rest of the party\n" +
             "• A precious cache of herbs and spices\n",
     };
-    
+
     public static string Roll(PractitionerSubType subType)
     {
         var strength = GetStat(modifier: 1);
@@ -120,6 +120,6 @@ public abstract class PractitionerCharacterRoller : NewCharacterRollerBase, ICha
 
         return GetCharacterResponseString(newCharacterTemplate);
     }
-    
+
     private static string GetSecret() => $"You have a secret: {Secrets[Random.Shared.Next(1, Secrets.Count + 1)]}";
 }

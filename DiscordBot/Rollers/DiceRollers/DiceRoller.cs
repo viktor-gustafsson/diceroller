@@ -27,7 +27,7 @@ public static class DiceRoller
 
                 sb.Append(DiceRollerMessages.GetResultMessage(rollDiceCommand, messageDto.HiddenDice));
             }
-                
+
             return sb.ToString();
         }
         catch (Exception)

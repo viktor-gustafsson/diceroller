@@ -25,7 +25,7 @@ public abstract class MagicMisHapRoller : IEffectRoller
         { 19, "A hunter's mark you alone can see. A symbol burns above your head. In d4 days, a Shadow Hunter will find you and try to slay you." },
         { 20, "A bell tolls. At a time of rest, you will be approached by a charming and mysterious figure. They will challenge you to a game of chance; if you win you get a free DL. Lose and they will snatch you away." }
     };
-    
+
     public static string Roll()
     {
         var dice = Random.Shared.Next(1, MagicMishaps.Count + 1);

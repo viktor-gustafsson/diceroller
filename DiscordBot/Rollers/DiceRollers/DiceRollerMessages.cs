@@ -55,7 +55,7 @@ public static class DiceRollerMessages
     private static string GetSumMessage(RollDiceCommand rollDiceCommand)
     {
         var sumOfKeptDice = rollDiceCommand.GetKeptDice().Sum();
-        
+
         if (rollDiceCommand.Modifier != 0)
         {
             var modifierMessage = rollDiceCommand.Modifier.ToString("+0;-0;");

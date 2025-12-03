@@ -9,7 +9,7 @@ public static class DiceCommandHandler
     public static async Task Handle(SocketSlashCommand command, bool hidden)
     {
         var userGlobalName = (command.User as SocketGuildUser)?.DisplayName;
-        
+
         var diceOption = hidden
             ? command.Data.Options.First(x => x.Name == Constants.HiddenDiceOptionName).Value.ToString()
             : command.Data.Options.First(x => x.Name == Constants.DiceOptionName).Value.ToString();

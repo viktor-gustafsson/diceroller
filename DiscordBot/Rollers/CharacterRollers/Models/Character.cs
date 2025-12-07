@@ -1,3 +1,5 @@
+using DiscordBot.Equipment;
+
 namespace DiscordBot.Rollers.CharacterRollers.Models;
 
 public class Character
@@ -19,5 +21,5 @@ public class Character
     public required string ClassSpecificEvent { get; init; }
     public required string ArcheTypeSpecificInfo { get; init; }
     public required string SubTypeSpecificInfo { get; init; }
-
+    public List<EquipmentItem> Equipment { get; init; } = [];
 }

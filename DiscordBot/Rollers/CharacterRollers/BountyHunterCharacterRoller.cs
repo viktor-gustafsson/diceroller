@@ -1,3 +1,4 @@
+using DiscordBot.Equipment;
 using DiscordBot.Rollers.CharacterRollers.Enums;
 using DiscordBot.Rollers.CharacterRollers.Models;
 
@@ -23,30 +24,14 @@ public abstract class BountyHunterCharacterRoller : NewCharacterRollerBase, ICha
             "armour they can find. A pistol shot cares nothing for such defenses.\n\n" +
             "🎯 Special Ability:\n" +
             "You may reroll a misfire dice but you must keep the\n" +
-            "second roll.\n\n" +
-            "🎒 Starting Equipment:\n" +
-            "• 2 pistols, 12 shot\n" +
-            "• 2 gunpowder pouches\n" +
-            "• Firearms Repair Kit:\n" +
-            "\tWhile at rest, you may use this handy kit to repair a\n" +
-            "\tdamaged firearm. However, if the weapon is\n" +
-            "\tbroken beyond repair it cannot be salvaged.\n",
+            "second roll.\n\n",
         [BountyHunterSubType.MasterTrapper] =
             "🪤 MASTER TRAPPER\n\n" +
             "Honour and glory are lost words to trick the foolish into a 'fair fight'.\n" +
             "A smart hunter lets their traps do the hard work for them.\n\n" +
             "🎯 Special Ability:\n" +
             "To find and make traps is Presence +2.\n\n" +
-            "Setting up a trap takes one round.\n\n" +
-            "🎒 Starting Equipment:\n" +
-            "• Two bear traps\n" +
-            "• Ten caltrops\n" +
-            "• Shovel\n" +
-            "• Hunter's Knife d4\n" +
-            "• Large heavy net\n" +
-            "• Jar of bees\n" +
-            "• Jar of sleep poison\n" +
-            "• Rope 100ft\n",
+            "Setting up a trap takes one round.\n\n",
         [BountyHunterSubType.BeastHunter] =
             "🏹 BEAST HUNTER\n\n" +
             "The wilds hold many creatures, and many of them are dangerous.\n" +
@@ -55,13 +40,7 @@ public abstract class BountyHunterCharacterRoller : NewCharacterRollerBase, ICha
             "🎯 Special Ability:\n" +
             "All rolls to track a creature's trail is Presence DR8, and you can figure\n" +
             "out where your prey is going. This includes the Hunting Rules (see\n" +
-            "page 89)\n\n" +
-            "🎒 Starting Equipment:\n" +
-            "• A bow/crossbow with 10 arrows\n" +
-            "• Bait Bag:\n" +
-            "\tThis stinking, musky bag will attract predators both\n" +
-            "\tnatural and demonic. Be careful where you place it.\n" +
-            "• Hunting Knife d4\n",
+            "page 89)\n\n",
     };
 
     public static string Roll(BountyHunterSubType subType)
@@ -74,6 +53,10 @@ public abstract class BountyHunterCharacterRoller : NewCharacterRollerBase, ICha
         var memory = GetMemory();
         var gold = GetGold(numberOfd6: 3);
 
+        var equipment = new List<EquipmentItem>();
+        equipment.AddRange(CharacterEquipmentSets.CommonStartingGear);
+        equipment.AddRange(CharacterEquipmentSets.GetEquipmentFor(subType));
+
         var newCharacterDto = new NewCharacterDto
         {
             Strength = strength,
@@ -85,6 +68,7 @@ public abstract class BountyHunterCharacterRoller : NewCharacterRollerBase, ICha
             SpecificInfo = "",
             Gold = gold,
             SubTypeSpecificInfo = SubTypeInformation[subType],
+            Equipment = equipment,
         };
         var newCharacterTemplate = GetNewCharacter(newCharacterDto);
         return GetCharacterResponseString(newCharacterTemplate);

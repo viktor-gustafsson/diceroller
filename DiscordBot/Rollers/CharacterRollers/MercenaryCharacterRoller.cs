@@ -1,3 +1,4 @@
+using DiscordBot.Equipment;
 using DiscordBot.Rollers.CharacterRollers.Enums;
 using DiscordBot.Rollers.CharacterRollers.Models;
 
@@ -23,25 +24,14 @@ public abstract class MercenaryCharacterRoller : NewCharacterRollerBase, ICharac
             "The future of war, and you know it. The world will likely end at the\n" +
             "barrel of a gun, and you will ensure it.\n\n" +
             "🎯 Special Ability:\n" +
-            "Shots with a musket get +2 at range.\n\n" +
-            "🎒 Starting Equipment:\n" +
-            "• Musket, 10 bullets\n" +
-            "• One gunpowder pouch\n" +
-            "• Bullet Forge:\n" +
-            "\tAt rest, you can make your own bullets easily. In a test, you can\n" +
-            "\targue about with the use of this small forge.\n",
+            "Shots with a musket get +2 at range.\n\n",
         [MercenarySubType.GreatSwordsman] =
             "⚔️ GREATSWORDSMAN\n\n" +
             "The strength of your arm and the reach of your sword has gotten\n" +
             "you this far. Not all of life's problems can be solved by the\n" +
             "edge of a blade, but until then your trusty Zweihander will do.\n\n" +
             "🎯 Special Ability:\n" +
-            "Zweihander: Roll an extra d4 damage on a successful hit.\n\n" +
-            "👑 Flamboyant Clothes:\n" +
-            "\tThese garments are a sign of your martial skill and so will\n" +
-            "\tcommand respect amongst other men and women of war.\n\n" +
-            "🎒 Starting Equipment:\n" +
-            "• Zweihander\n",
+            "Zweihander: Roll an extra d4 damage on a successful hit.\n\n",
         [MercenarySubType.Grenadier] =
             "💣 GRENADIER\n\n" +
             "Gunpowder and fire call to your soul, explosions and shockwaves\n" +
@@ -49,14 +39,7 @@ public abstract class MercenaryCharacterRoller : NewCharacterRollerBase, ICharac
             "shake the world. Or turn you into a fine mist trying.\n\n" +
             "🎯 Special Ability:\n" +
             "You may reroll a bomb malfunction dice, but you must\n" +
-            "keep the second roll.\n\n" +
-            "🎒 Starting Equipment:\n" +
-            "• 6 bombs\n" +
-            "• 2 gunpowder pouches\n" +
-            "• Bomb Maker's Kit:\n" +
-            "\tWhile at rest, you may roll d4 to see how many bombs you make with\n" +
-            "\tthe materials you have. This includes the gunpowder and\n" +
-            "\twick. Best do this away from an open flame.\n",
+            "keep the second roll.\n\n",
     };
 
     private const string Info = "Normal agility tests are DR14";
@@ -71,6 +54,10 @@ public abstract class MercenaryCharacterRoller : NewCharacterRollerBase, ICharac
         var memory = GetMemory();
         var gold = GetGold(numberOfd6: 2);
 
+        var equipment = new List<EquipmentItem>();
+        equipment.AddRange(CharacterEquipmentSets.CommonStartingGear);
+        equipment.AddRange(CharacterEquipmentSets.GetEquipmentFor(subType));
+
         var newCharacterDto = new NewCharacterDto
         {
             Strength = strength,
@@ -82,6 +69,7 @@ public abstract class MercenaryCharacterRoller : NewCharacterRollerBase, ICharac
             SpecificInfo = Info,
             Gold = gold,
             SubTypeSpecificInfo = SubTypeInformation[subType],
+            Equipment = equipment,
         };
         var newCharacterTemplate = GetNewCharacter(newCharacterDto);
 

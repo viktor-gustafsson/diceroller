@@ -1,3 +1,4 @@
+using DiscordBot.Equipment;
 using DiscordBot.Rollers.CharacterRollers.Enums;
 using DiscordBot.Rollers.CharacterRollers.Models;
 
@@ -32,19 +33,7 @@ public abstract class WitchCharacterRoller : NewCharacterRollerBase, ICharacterR
             "dark branches.\n\n" +
             "🎯 Special Ability:\n" +
             "Forest through the trees\n" +
-            "Roll Presence +2 to find your way in the woods.\n\n" +
-            "🦅 Trusty Bird:\n" +
-            "Your bird is loyal but only to you and despises\n" +
-            "everyone else. You have a primeval link to its\n" +
-            "thoughts and it will do as you command. It can scout,\n" +
-            "keep watch and even attack your foes.\n\n" +
-            "HP 4\n" +
-            "Claws/bite d4\n\n" +
-            "🎒 Starting Equipment:\n" +
-            "• Talisman:\n" +
-            "\tA small wood and stone item that can be used to\n" +
-            "\tbless others. You can give +1 to any roll made by\n" +
-            "\tyourself once per round.\n",
+            "Roll Presence +2 to find your way in the woods.\n\n",
         [WitchSubType.Herbalist] =
             "🌿 HERBALIST\n\n" +
             "Some believe that magic is bestowed by the gods, others by\n" +
@@ -54,19 +43,7 @@ public abstract class WitchCharacterRoller : NewCharacterRollerBase, ICharacterR
             "You may brew d6 of the potions or poisons on\n" +
             "page 86-87 as long as you can scrounge up some\n" +
             "ingredients. Potions made in the wild\n" +
-            "lose vitality after 24 hours.\n\n" +
-            "🎒 Starting Equipment:\n" +
-            "• Brewers Kit consisting of:\n" +
-            "\t- Brass pot\n" +
-            "\t- Weights and scales\n" +
-            "\t- Flint and steel\n" +
-            "\t- Six glass bottles with stops\n" +
-            "\t- One pint of pure ethanol\n" +
-            "• Healers Mask:\n" +
-            "\tThis mask has glass lenses and a long beak stuffed\n" +
-            "\twith healing herbs. This will protect you\n" +
-            "\tfrom most airborne foul smells and airborne\n" +
-            "\tmaladies. It also makes people uncomfortable.\n",
+            "lose vitality after 24 hours.\n\n",
         [WitchSubType.Hexen] =
             "🕯️ HEXEN\n\n" +
             "Whether you made a pact with a demon or not, it matters none to those who\n" +
@@ -75,16 +52,7 @@ public abstract class WitchCharacterRoller : NewCharacterRollerBase, ICharacterR
             "🎯 Special Ability:\n" +
             "You may curse one creature a day that has done you wrong.\n" +
             "All tests are an additional -2 on behalf of the creature and all\n" +
-            "attacks upon it gain +2.\n\n" +
-            "🎒 Starting Equipment:\n" +
-            "• Black Candles:\n" +
-            "\tThese inky black candles once lit, can\n" +
-            "\toffer protection from malevolent spirits\n" +
-            "\tand entities.\n" +
-            "• Deck of Cards:\n" +
-            "\tThese esoteric cards can be shuffled and drawn to\n" +
-            "\tdivine the future, however the future is always dark\n" +
-            "\tand vague.\n",
+            "attacks upon it gain +2.\n\n",
     };
 
     public static string Roll(WitchSubType subType)
@@ -97,6 +65,10 @@ public abstract class WitchCharacterRoller : NewCharacterRollerBase, ICharacterR
         var runningFrom = GetRunningFrom();
         var gold = GetGold(numberOfd6: 1);
 
+        var equipment = new List<EquipmentItem>();
+        equipment.AddRange(CharacterEquipmentSets.CommonStartingGear);
+        equipment.AddRange(CharacterEquipmentSets.GetEquipmentFor(subType));
+
         var newCharacterDto = new NewCharacterDto
         {
             Strength = strength,
@@ -108,6 +80,7 @@ public abstract class WitchCharacterRoller : NewCharacterRollerBase, ICharacterR
             SpecificInfo = Info,
             Gold = gold,
             SubTypeSpecificInfo = SubTypeInformation[subType],
+            Equipment = equipment,
         };
         var newCharacterTemplate = GetNewCharacter(newCharacterDto);
 

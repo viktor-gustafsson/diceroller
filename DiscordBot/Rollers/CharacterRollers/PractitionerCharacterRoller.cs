@@ -1,3 +1,4 @@
+using DiscordBot.Equipment;
 using DiscordBot.Rollers.CharacterRollers.Enums;
 using DiscordBot.Rollers.CharacterRollers.Models;
 
@@ -29,14 +30,7 @@ public abstract class PractitionerCharacterRoller : NewCharacterRollerBase, ICha
             "Toughness to regain d4 hit\n" +
             "points for one round. If you do\n" +
             "not heal by the next round you\n" +
-            "fall unconscious at 0 HP.\n\n" +
-            "🎒 Starting Equipment:\n" +
-            "• Heavy Armour\n" +
-            "• Short Sword\n" +
-            "• Badge of Honour:\n" +
-            "\tYou wear a badge of honour and\n" +
-            "\trespect in combat. This will\n" +
-            "\tcommand respect from the faithful.\n",
+            "fall unconscious at 0 HP.\n\n",
         [PractitionerSubType.VowOfHealing] =
             "⛑️ VOW OF HEALING\n\n" +
             "Some practice their faith through\n" +
@@ -51,18 +45,7 @@ public abstract class PractitionerCharacterRoller : NewCharacterRollerBase, ICha
             "on a creature at DR14. On a\n" +
             "success, the creature suffers d4\n" +
             "internal bleeding damage for\n" +
-            "2 rounds.\n\n" +
-            "🎒 Starting Equipment:\n" +
-            "• Needle\n" +
-            "• Catgut thread\n" +
-            "• Gauze and bandages\n" +
-            "• Surgical tongs\n" +
-            "• Ointment\n" +
-            "• Smelling salts\n" +
-            "• Poppy extract\n" +
-            "• Small sharp knife\n" +
-            "• Cauterising iron\n" +
-            "• Tincture\n",
+            "2 rounds.\n\n",
         [PractitionerSubType.VovOfSustenance] =
             "🍞 VOW OF SUSTENANCE\n\n" +
             "It is written that the Torn Prophet fed a\n" +
@@ -83,15 +66,7 @@ public abstract class PractitionerCharacterRoller : NewCharacterRollerBase, ICha
             "unconscious for d4 rounds.\n" +
             "The pan can also be used to\n" +
             "parry like a sword. Not bad for a\n" +
-            "humble skillet.\n\n"+
-            "🎒 Starting Equipment:\n" +
-            "• 8 rations and two water skins\n" +
-            "• Box of salt\n" +
-            "• Cooking pot\n" +
-            "• Skillet\n" +
-            "• Cutting knife and spoon\n" +
-            "• Enough bowls for the rest of the party\n" +
-            "• A precious cache of herbs and spices\n",
+            "humble skillet.\n\n",
     };
 
     public static string Roll(PractitionerSubType subType)
@@ -104,6 +79,10 @@ public abstract class PractitionerCharacterRoller : NewCharacterRollerBase, ICha
         var secret = GetSecret();
         var gold = GetGold(numberOfd6: 1);
 
+        var equipment = new List<EquipmentItem>();
+        equipment.AddRange(CharacterEquipmentSets.CommonStartingGear);
+        equipment.AddRange(CharacterEquipmentSets.GetEquipmentFor(subType));
+
         var newCharacterDto = new NewCharacterDto
         {
             Strength = strength,
@@ -115,6 +94,7 @@ public abstract class PractitionerCharacterRoller : NewCharacterRollerBase, ICha
             SpecificInfo = "",
             Gold = gold,
             SubTypeSpecificInfo = SubTypeInformation[subType],
+            Equipment = equipment,
         };
         var newCharacterTemplate = GetNewCharacter(newCharacterDto);
 

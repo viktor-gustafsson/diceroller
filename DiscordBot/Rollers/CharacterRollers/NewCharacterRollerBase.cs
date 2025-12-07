@@ -1,3 +1,4 @@
+using DiscordBot.Equipment;
 using DiscordBot.Rollers.CharacterRollers.Models;
 
 namespace DiscordBot.Rollers.CharacterRollers;
@@ -55,6 +56,7 @@ public abstract class NewCharacterRollerBase
             ClassSpecificEvent = newCharacterDto.ClassSpecificEvent,
             ArcheTypeSpecificInfo = newCharacterDto.SpecificInfo,
             SubTypeSpecificInfo = newCharacterDto.SubTypeSpecificInfo,
+            Equipment = newCharacterDto.Equipment,
         };
     }
 
@@ -66,14 +68,6 @@ public abstract class NewCharacterRollerBase
                                $"👤 Physical Attribute: {character.PhysicalAttribute}\n" +
                                $"🤝 Party Connection: {character.PartyConnection}\n";
 
-        var commonStartGear =
-                        $"• Satchel\n" +
-                        $"• Water and Rations for 3 days\n" +
-                        $"• Bedroll\n" +
-                        $"• Flint and steel\n" +
-                        $"• 50ft of rope\n" +
-                        $"• 2 torches";
-
         if (!string.IsNullOrEmpty(character.ClassSpecificEvent))
         {
             characterDetails += $"🌟 {character.ClassSpecificEvent}\n";
@@ -84,10 +78,12 @@ public abstract class NewCharacterRollerBase
             characterDetails += $"ℹ️ Extra info: {character.ArcheTypeSpecificInfo}\n";
         }
 
+        var equipmentSection = FormatEquipment(character.Equipment);
+
         return $"```\n" +
                $"🎲 NEW CHARACTER STATS\n\n" +
                $"{character.SubTypeSpecificInfo}"+
-               $"{commonStartGear}\n\n" +
+               $"{equipmentSection}" +
                $"💪 Strength:  [{GetAbilityModifier(character.Strength),2}]  (Rolled: {character.Strength,2})\n" +
                $"🏃 Agility:   [{GetAbilityModifier(character.Agility),2}]  (Rolled: {character.Agility,2})\n" +
                $"👑 Presence:  [{GetAbilityModifier(character.Presence),2}]  (Rolled: {character.Presence,2})\n" +
@@ -105,5 +101,31 @@ public abstract class NewCharacterRollerBase
                $"```\n" +
                characterDetails +
                "```";
+    }
+
+    private static string FormatEquipment(List<EquipmentItem> equipment)
+    {
+        if (equipment.Count == 0)
+            return "";
+
+        var grouped = equipment
+            .GroupBy(e => e.Category)
+            .OrderBy(g => g.Key);
+
+        var sb = new System.Text.StringBuilder();
+        sb.AppendLine("🎒 Starting Equipment:\n");
+
+        foreach (var group in grouped)
+        {
+            sb.AppendLine($"{group.First().CategoryDisplayName}");
+            foreach (var item in group)
+            {
+                var quantityStr = item.Quantity > 1 ? $" x{item.Quantity}" : "";
+                sb.AppendLine($"• {item.DisplayName}{quantityStr} [W: {item.Weight}]");
+            }
+            sb.AppendLine();
+        }
+
+        return sb.ToString();
     }
 }

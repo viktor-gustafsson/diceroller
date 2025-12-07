@@ -1,3 +1,4 @@
+using DiscordBot.Equipment;
 using DiscordBot.Rollers.CharacterRollers.Enums;
 using DiscordBot.Rollers.CharacterRollers.Models;
 
@@ -25,18 +26,7 @@ public abstract class OpportunistCharacterRoller : NewCharacterRollerBase, IChar
             "that's what you tell everyone.\n\n" +
             "🎯 Special Ability:\n" +
             "Agility rolls for performing acrobatics\n" +
-            "gain +2.\n\n" +
-            "🎒 Starting Equipment:\n" +
-            "• A grappling hook and rope\n" +
-            "• Crossbow with ten bolts\n" +
-            "• The Broken Compass:\n" +
-            "\tThis compass does not point north,\n" +
-            "\tit does however point to the thing\n" +
-            "\tyou most desire.\n" +
-            "• Sportsman's Sword d6+2:\n" +
-            "\tDR10 to disarm an opponent of\n" +
-            "\ttheir held weapon rather than\n" +
-            "\tinflict harm.\n",
+            "gain +2.\n\n",
         [OpportunistSubType.SneakThief] =
             "🗡️ SNEAK THIEF\n\n" +
             "Fast hands make for light pockets. No\n" +
@@ -47,18 +37,7 @@ public abstract class OpportunistCharacterRoller : NewCharacterRollerBase, IChar
             "their coin.\n\n" +
             "🎯 Special Ability:\n" +
             "Picking pockets and locks gains\n" +
-            "+2 to a roll.\n\n" +
-            "🎒 Starting Equipment:\n" +
-            "• Grappling Hook\n" +
-            "• Crossbow:\n" +
-            "\tThis custom made crossbow will shoot\n" +
-            "\ta grappling hook and rope up to\n" +
-            "\t30ft. The rope is light and can only\n" +
-            "\tsupport one person at a time.\n" +
-            "• Smoke bombs x 5:\n" +
-            "\tOnce thrown, these will cover a ten\n" +
-            "\tfoot sphere and dissipate after a\n" +
-            "\tcouple of seconds.\n",
+            "+2 to a roll.\n\n",
         [OpportunistSubType.SilverTonguedTrickster] =
             "🎭 SILVER-TONGUED TRICKSTER\n\n" +
             "You are a lover, not a fighter. That being\n" +
@@ -67,16 +46,7 @@ public abstract class OpportunistCharacterRoller : NewCharacterRollerBase, IChar
             "for that night.\n\n" +
             "🎯 Special Ability:\n" +
             "Gain +2 to rolls pertaining to convincing\n" +
-            "or lying to others.\n\n" +
-            "🎒 Starting Equipment:\n" +
-            "• Lucky Coin:\n" +
-            "\tA large brilliantly shiny gold coin\n" +
-            "\tfrom a foreign land. It will return\n" +
-            "\tto your hands in a few minutes.\n" +
-            "\tPerfect for bribery.\n" +
-            "• Perfume:\n" +
-            "\tThe smell of a rose is irresistible to all that smell\n" +
-            "\tit. Perfect for those with no time to bathe.\n",
+            "or lying to others.\n\n",
     };
 
     private const string Info = "Agility tests are DR10";
@@ -91,6 +61,10 @@ public abstract class OpportunistCharacterRoller : NewCharacterRollerBase, IChar
         var desire = GetDesire();
         var gold = GetGold(numberOfd6: 2);
 
+        var equipment = new List<EquipmentItem>();
+        equipment.AddRange(CharacterEquipmentSets.CommonStartingGear);
+        equipment.AddRange(CharacterEquipmentSets.GetEquipmentFor(subType));
+
         var newCharacterDto = new NewCharacterDto
         {
             Strength = strength,
@@ -102,6 +76,7 @@ public abstract class OpportunistCharacterRoller : NewCharacterRollerBase, IChar
             SpecificInfo = Info,
             Gold = gold,
             SubTypeSpecificInfo = SubTypeInformation[subType],
+            Equipment = equipment,
         };
         var newCharacterTemplate = GetNewCharacter(newCharacterDto);
 

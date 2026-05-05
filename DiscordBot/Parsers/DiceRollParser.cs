@@ -29,7 +29,7 @@ public static class DiceRollParser
                 DicesToKeep = parts.Length > 2 ? int.Parse(parts[2]) : int.Parse(parts[0]),
                 Modifier = modifier,
                 Command = command,
-                ValidCommand = parts.Length < 2,
+                IsValid = parts.Length >= 2,
                 Rolls = new int[int.Parse(parts[0])],
                 KeepHigh = !command.Contains('l'),
                 UserDisplayName = messageDto.UserDisplayName,

@@ -20,10 +20,10 @@ public class DiscordCommandHandler(
         GatewayIntents = GatewayIntents.AllUnprivileged | GatewayIntents.MessageContent,
     });
 
-    private readonly Dictionary<string, Func<SocketSlashCommand, bool, Task>> _diceCommandHanders = new()
+    private readonly Dictionary<string, Func<SocketSlashCommand, Task>> _diceCommandHandlers = new()
     {
-        [Constants.RollOptionName] = (command, _) => DiceCommandHandler.Handle(command, hidden: false, recorder),
-        [Constants.RollOptionHiddenName] = (command, _) => DiceCommandHandler.Handle(command, hidden: true, recorder),
+        [Constants.RollOptionName] = command => DiceCommandHandler.Handle(command, hidden: false, recorder),
+        [Constants.RollOptionHiddenName] = command => DiceCommandHandler.Handle(command, hidden: true, recorder),
     };
 
     private readonly Dictionary<string, Func<SocketSlashCommand, Task>> _effectCommandHandlers = new()
@@ -181,8 +181,8 @@ public class DiscordCommandHandler(
                 => characterHandler(command),
             var name when _effectCommandHandlers.TryGetValue(name, out var effectHandler)
                 => effectHandler(command),
-            var name when _diceCommandHanders.TryGetValue(name, out var diceHandler)
-                => diceHandler(command, name == Constants.RollOptionHiddenName),
+            var name when _diceCommandHandlers.TryGetValue(name, out var diceHandler)
+                => diceHandler(command),
             var name when _utilityCommandHandlers.TryGetValue(name, out var utilityHandler)
                 => utilityHandler(command),
             _ => command.RespondAsync(ErrorMessages.FallbackErrorMessage, ephemeral: true),

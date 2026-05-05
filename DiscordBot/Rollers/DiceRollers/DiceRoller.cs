@@ -16,7 +16,7 @@ public static class DiceRoller
             var rollDiceCommands = DiceRollParser.Parse(messageDto);
             foreach (var rollDiceCommand in rollDiceCommands)
             {
-                if (rollDiceCommand.ValidCommand)
+                if (!rollDiceCommand.IsValid)
                     return new DiceRollResult(ErrorMessages.InvalidRollCommand, []);
 
                 // Roll the dice

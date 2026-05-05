@@ -46,7 +46,7 @@ public abstract class PractitionerCharacterRoller : NewCharacterRollerBase, ICha
             "success, the creature suffers d4\n" +
             "internal bleeding damage for\n" +
             "2 rounds.\n\n",
-        [PractitionerSubType.VovOfSustenance] =
+        [PractitionerSubType.VowOfSustenance] =
             "🍞 VOW OF SUSTENANCE\n\n" +
             "It is written that the Torn Prophet fed a\n" +
             "thousand people with nought but a grain\n" +

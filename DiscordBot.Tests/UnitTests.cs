@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using DiscordBot.Models;
 using DiscordBot.Parsers;
 using DiscordBot.Rollers.DiceRollers;
@@ -28,7 +29,7 @@ public class DiceRollParserTests
         cmd.DicesToKeep.ShouldBe(3);
         cmd.Modifier.ShouldBe(2);
         cmd.Command.ShouldBe("4d6k3h");
-        cmd.ValidCommand.ShouldBeFalse("parts length should be >= 2 for a valid command");
+        cmd.IsValid.ShouldBeTrue("parts length should be >= 2 for a valid command");
     }
 
     [Fact]
@@ -52,7 +53,7 @@ public class DiceRollParserTests
         cmd.DicesToKeep.ShouldBe(2);
         cmd.Modifier.ShouldBe(-1);
         cmd.Command.ShouldBe("6d6k2l");
-        cmd.ValidCommand.ShouldBeFalse();
+        cmd.IsValid.ShouldBeTrue();
     }
 
     [Fact]
@@ -77,7 +78,7 @@ public class DiceRollParserTests
         first.DicesToKeep.ShouldBe(3, "default keep is dice count when k is not provided");
         first.Modifier.ShouldBe(0);
         first.Command.ShouldBe("3d20");
-        first.ValidCommand.ShouldBeFalse();
+        first.IsValid.ShouldBeTrue();
 
         var second = diceRollRequest[1];
         second.DiceCount.ShouldBe(2);
@@ -85,7 +86,7 @@ public class DiceRollParserTests
         second.DicesToKeep.ShouldBe(1);
         second.Modifier.ShouldBe(5);
         second.Command.ShouldBe("2d6k1l");
-        second.ValidCommand.ShouldBeFalse();
+        second.IsValid.ShouldBeTrue();
     }
 
     [Theory]
@@ -105,6 +106,9 @@ public class DiceRollParserTests
 
 public class MessagesFormattingTests
 {
+    private static string StripAnsi(string s) =>
+        Regex.Replace(s, "\\[[0-9;]*m", "");
+
     [Fact]
     public void ResultMessage_DefaultKeepHighest_NoModifier_HidesModifierAndKeepSection()
     {
@@ -117,14 +121,14 @@ public class MessagesFormattingTests
             DicesToKeep = 3,
             Modifier = 0,
             Command = "4d6k3h",
-            ValidCommand = false,
+            IsValid = true,
             KeepHigh = true,
             Rolls = [1, 2, 3, 4],
             UserDisplayName = user,
         };
 
         // Act
-        var msg = DiceRollerMessages.GetResultMessage(roll, false);
+        var msg = StripAnsi(DiceRollerMessages.GetResultMessage(roll, false));
 
         // Assert (structure and key content, not exact formatting)
         msg.ShouldContain("```");
@@ -143,7 +147,7 @@ public class MessagesFormattingTests
         // Sum line with no modifier should not include "= total"
         msg.ShouldSatisfyAllConditions(s =>
         {
-            s.ShouldContain("✨ Sum: 9");
+            s.ShouldContain("🧾 Sum: 9");
             s.ShouldNotContain(" = ");
         });
     }
@@ -160,14 +164,14 @@ public class MessagesFormattingTests
             DicesToKeep = 1,
             Modifier = 2,
             Command = "3d20k1l+2",
-            ValidCommand = false,
+            IsValid = true,
             KeepHigh = false,
             Rolls = [5, 7, 10],
             UserDisplayName = user,
         };
 
         // Act
-        var msg = DiceRollerMessages.GetResultMessage(roll, false);
+        var msg = StripAnsi(DiceRollerMessages.GetResultMessage(roll, false));
 
         // Assert
         msg.ShouldContain("```");
@@ -179,7 +183,7 @@ public class MessagesFormattingTests
 
         // Modifier line shown and equation present
         msg.ShouldContain("🟦 Modifier: [ 2 ]");
-        msg.ShouldContain("✨ Sum: 5+2 = 7");
+        msg.ShouldContain("🧾 Sum: 5+2 = 7");
     }
 
     [Fact]

@@ -6,7 +6,7 @@ public class RollDiceCommand
     public int DiceType { get; init; }
     public int DicesToKeep { get; init; }
     public int Modifier { get; init; }
-    public bool ValidCommand { get; init; }
+    public bool IsValid { get; init; }
     public required string Command { get; init; }
     public int[] Rolls { get; init; } = [];
     public bool KeepHigh { get; init; }

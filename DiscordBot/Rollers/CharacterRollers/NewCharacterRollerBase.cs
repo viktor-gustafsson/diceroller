@@ -16,6 +16,8 @@ public abstract class NewCharacterRollerBase
         return sum;
     }
     protected static int GetAbilityModifier(int abilityScore) => Lists.AbilityModifiers[abilityScore];
+
+    private static T PickRandom<T>(Dictionary<int, T> dict) => dict[Random.Shared.Next(1, dict.Count + 1)];
     protected static int GetHp(int toughness, int modifier, int dice)
     {
         var diceResult = Random.Shared.Next(1,dice + 1);
@@ -39,14 +41,14 @@ public abstract class NewCharacterRollerBase
     {
         return new Character
         {
-            Type = Lists.CharacterTypes[Random.Shared.Next(1, Lists.CharacterTypes.Count + 1)],
-            Wants = Lists.CharacterWants[Random.Shared.Next(1, Lists.CharacterWants.Count + 1)],
-            SetBack = Lists.CharacterSetbacks[Random.Shared.Next(1, Lists.CharacterSetbacks.Count + 1)],
-            Quirk = Lists.CharacterQuirks[Random.Shared.Next(1, Lists.CharacterQuirks.Count + 1)],
-            AdditionalSkill = Lists.AdditionalSkills[Random.Shared.Next(1, Lists.AdditionalSkills.Count + 1)],
-            Passion = Lists.Passions[Random.Shared.Next(1, Lists.Passions.Count + 1)],
-            PhysicalAttribute = Lists.PhysicalAttributes[Random.Shared.Next(1, Lists.PhysicalAttributes.Count + 1)],
-            PartyConnection = Lists.PartyConnections[Random.Shared.Next(1, Lists.PartyConnections.Count + 1)],
+            Type = PickRandom(Lists.CharacterTypes),
+            Wants = PickRandom(Lists.CharacterWants),
+            SetBack = PickRandom(Lists.CharacterSetbacks),
+            Quirk = PickRandom(Lists.CharacterQuirks),
+            AdditionalSkill = PickRandom(Lists.AdditionalSkills),
+            Passion = PickRandom(Lists.Passions),
+            PhysicalAttribute = PickRandom(Lists.PhysicalAttributes),
+            PartyConnection = PickRandom(Lists.PartyConnections),
             Agility = newCharacterDto.Agility,
             Presence = newCharacterDto.Presence,
             Strength = newCharacterDto.Strength,

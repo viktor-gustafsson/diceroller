@@ -108,7 +108,7 @@ public static class CharacterEquipmentSets
             new(EquipmentName.DoctorsKit),
             new(EquipmentName.SmallDagger),
         ],
-        PractitionerSubType.VovOfSustenance =>
+        PractitionerSubType.VowOfSustenance =>
         [
             new(EquipmentName.Rations, 2),
             new(EquipmentName.Waterskin, 2),

@@ -26,7 +26,7 @@ public static class StatsCommandHandler
         var response = sub.Name switch
         {
             Constants.StatsSubDistribution => await BuildDistribution(contextFactory, guildId,
-                (long)(subOptions.First(o => o.Name == Constants.StatsDieOptionName).Value)),
+                (string)subOptions.First(o => o.Name == Constants.StatsDieOptionName).Value),
             Constants.StatsSubCrits => await BuildCrits(contextFactory, guildId),
             Constants.StatsSubTop => await BuildTop(contextFactory, guildId),
             Constants.StatsSubStreaks => await BuildStreaks(contextFactory, guildId),
@@ -38,14 +38,17 @@ public static class StatsCommandHandler
     }
 
     private static async Task<string> BuildDistribution(
-        IDbContextFactory<StatisticsDbContext> contextFactory, ulong guildId, long dieType)
+        IDbContextFactory<StatisticsDbContext> contextFactory, ulong guildId, string dieInput)
     {
+        if (!TryParseDie(dieInput, out var dieType))
+            return "📊 Invalid die. Use the form `d20` (any number 2-100).";
+
         await using var ctx = await contextFactory.CreateDbContextAsync();
 
         var rows = await (
             from d in ctx.RollDice
             join r in ctx.Rolls on d.RollId equals r.Id
-            where r.GuildId == guildId && d.DieType == (int)dieType
+            where r.GuildId == guildId && d.DieType == dieType
             group d by d.Value into g
             select new { Value = g.Key, Count = g.Count() }).ToListAsync();
 
@@ -274,6 +277,17 @@ public static class StatsCommandHandler
             }
         }
         return longest;
+    }
+
+    private static bool TryParseDie(string input, out int dieType)
+    {
+        dieType = 0;
+        var trimmed = input.Trim().ToLowerInvariant();
+        if (trimmed.Length < 2 || trimmed[0] != 'd') return false;
+        if (!int.TryParse(trimmed[1..], out var n)) return false;
+        if (n < 2 || n > 100) return false;
+        dieType = n;
+        return true;
     }
 
     private static int ScaleBar(int count, int max) =>

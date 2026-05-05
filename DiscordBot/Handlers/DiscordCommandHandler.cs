@@ -142,8 +142,8 @@ public class DiscordCommandHandler(
                     .WithName(Constants.StatsSubDistribution)
                     .WithDescription("Show value distribution for a die type")
                     .WithType(ApplicationCommandOptionType.SubCommand)
-                    .AddOption(Constants.StatsDieOptionName, ApplicationCommandOptionType.Integer,
-                        "Die type, e.g. 20", isRequired: true, minValue: 2, maxValue: 100)
+                    .AddOption(Constants.StatsDieOptionName, ApplicationCommandOptionType.String,
+                        "Die type, e.g. d20", isRequired: true)
                     .AddOption(Constants.StatsPublicOptionName, ApplicationCommandOptionType.Boolean,
                         "Show to everyone in the channel (default: only you)", isRequired: false))
                 .AddOption(new SlashCommandOptionBuilder()

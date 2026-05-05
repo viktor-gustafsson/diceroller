@@ -28,8 +28,6 @@ DICE_BOT_DB_PATH=/path/to/file.db DISCORD_BOT_TOKEN=... dotnet run --project Dis
 dotnet publish DiscordBot -c Release -r linux-arm64 --self-contained true -o /home/zarcton/published-bot/
 ```
 
-There are 2 known pre-existing failing tests in `MessagesFormattingTests` — assertions don't account for ANSI color codes that `DiceRollerMessages` emits. Don't conflate them with regressions from your changes.
-
 ## Architecture
 
 ### Slash command dispatch

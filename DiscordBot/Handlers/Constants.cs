@@ -25,4 +25,6 @@ public static class Constants
     public const string StatsSubHours = "hours";
     public const string StatsDieOptionName = "die";
     public const string StatsPublicOptionName = "public";
+
+    public const string MyStatsOptionName = "mystats";
 }

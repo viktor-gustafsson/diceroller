@@ -37,6 +37,7 @@ public class DiscordCommandHandler(
     {
         [Constants.HelpOptionName] = HelpCommandHandler.Handle,
         [Constants.StatsOptionName] = c => StatsCommandHandler.Handle(c, statsContextFactory),
+        [Constants.MyStatsOptionName] = c => MyStatsCommandHandler.Handle(c, statsContextFactory),
     };
 
     private readonly Dictionary<string, Func<SocketSlashCommand, Task>> _characterCommandHandlers = new()
@@ -170,6 +171,11 @@ public class DiscordCommandHandler(
                     .WithType(ApplicationCommandOptionType.SubCommand)
                     .AddOption(Constants.StatsPublicOptionName, ApplicationCommandOptionType.Boolean,
                         "Show to everyone in the channel (default: only you)", isRequired: false)),
+            new SlashCommandBuilder()
+                .WithName(Constants.MyStatsOptionName)
+                .WithDescription("View your personal dice roll statistics for this server")
+                .AddOption(Constants.StatsPublicOptionName, ApplicationCommandOptionType.Boolean,
+                    "Show to everyone in the channel (default: only you)", isRequired: false),
         ];
     }
 

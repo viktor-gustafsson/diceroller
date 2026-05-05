@@ -7,7 +7,7 @@ namespace DiscordBot.Rollers.DiceRollers;
 
 public static class DiceRoller
 {
-    public static string ParseAndRollDice(MessageDto messageDto)
+    public static DiceRollResult ParseAndRollDice(MessageDto messageDto)
     {
         try
         {
@@ -17,7 +17,7 @@ public static class DiceRoller
             foreach (var rollDiceCommand in rollDiceCommands)
             {
                 if (rollDiceCommand.ValidCommand)
-                    return ErrorMessages.InvalidRollCommand;
+                    return new DiceRollResult(ErrorMessages.InvalidRollCommand, []);
 
                 // Roll the dice
                 for (var i = 0; i < rollDiceCommand.DiceCount; i++)
@@ -28,11 +28,11 @@ public static class DiceRoller
                 sb.Append(DiceRollerMessages.GetResultMessage(rollDiceCommand, messageDto.HiddenDice));
             }
 
-            return sb.ToString();
+            return new DiceRollResult(sb.ToString(), rollDiceCommands);
         }
         catch (Exception)
         {
-            return ErrorMessages.InvalidRollCommand;
+            return new DiceRollResult(ErrorMessages.InvalidRollCommand, []);
         }
     }
 }

@@ -4,50 +4,62 @@ using Discord.WebSocket;
 using DiscordBot.Rollers.CharacterRollers;
 using DiscordBot.Rollers.CharacterRollers.Enums;
 using DiscordBot.Rollers.EffectRollers;
+using DiscordBot.Statistics;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 
 namespace DiscordBot.Handlers;
 
-public class DiscordCommandHandler(string token)
+public class DiscordCommandHandler(
+    string token,
+    IRollRecorder recorder,
+    IDbContextFactory<StatisticsDbContext> statsContextFactory) : IHostedService
 {
     private readonly DiscordSocketClient _client = new(new DiscordSocketConfig
     {
         GatewayIntents = GatewayIntents.AllUnprivileged | GatewayIntents.MessageContent,
     });
 
-    private static readonly Dictionary<string, Func<SocketSlashCommand, bool, Task>> DiceCommandHanders = new()
+    private readonly Dictionary<string, Func<SocketSlashCommand, bool, Task>> _diceCommandHanders = new()
     {
-        [Constants.RollOptionName] = (command, _) => DiceCommandHandler.Handle(command: command, hidden: false),
-        [Constants.RollOptionHiddenName] = (command, _) => DiceCommandHandler.Handle(command: command, hidden: true),
+        [Constants.RollOptionName] = (command, _) => DiceCommandHandler.Handle(command, hidden: false, recorder),
+        [Constants.RollOptionHiddenName] = (command, _) => DiceCommandHandler.Handle(command, hidden: true, recorder),
     };
 
-    private static readonly Dictionary<string, Func<SocketSlashCommand, Task>> EffectCommandHandlers = new()
+    private readonly Dictionary<string, Func<SocketSlashCommand, Task>> _effectCommandHandlers = new()
     {
-        [Constants.RollOptionDevilsLuckName] = EffectCommandHandler.Handle<DevilsLuckRoller>,
-        [Constants.RollOptionWoundName] = EffectCommandHandler.Handle<WoundRoller>,
-        [Constants.RollOptionMagicMisHapName] = EffectCommandHandler.Handle<MagicMisHapRoller>,
+        [Constants.RollOptionDevilsLuckName] = c => EffectCommandHandler.Handle<DevilsLuckRoller>(c, recorder),
+        [Constants.RollOptionWoundName] = c => EffectCommandHandler.Handle<WoundRoller>(c, recorder),
+        [Constants.RollOptionMagicMisHapName] = c => EffectCommandHandler.Handle<MagicMisHapRoller>(c, recorder),
     };
 
-    private static readonly Dictionary<string, Func<SocketSlashCommand, Task>> UtilityCommandHandlers = new()
+    private readonly Dictionary<string, Func<SocketSlashCommand, Task>> _utilityCommandHandlers = new()
     {
         [Constants.HelpOptionName] = HelpCommandHandler.Handle,
+        [Constants.StatsOptionName] = c => StatsCommandHandler.Handle(c, statsContextFactory),
     };
 
-    private static readonly Dictionary<string, Func<SocketSlashCommand, Task>> CharacterCommandHandlers = new()
+    private readonly Dictionary<string, Func<SocketSlashCommand, Task>> _characterCommandHandlers = new()
     {
-        [Constants.NewWitchCharacter] = NewCharacterCommandHandler.Roll<WitchCharacterRoller, WitchSubType>,
-        [Constants.NewBountyHunterCharacter] = NewCharacterCommandHandler.Roll<BountyHunterCharacterRoller, BountyHunterSubType>,
-        [Constants.NewMercenaryCharacter] = NewCharacterCommandHandler.Roll<MercenaryCharacterRoller, MercenarySubType>,
-        [Constants.NewOpportunistCharacter] = NewCharacterCommandHandler.Roll<OpportunistCharacterRoller, OpportunistSubType>,
-        [Constants.NewPractitionerCharacter] = NewCharacterCommandHandler.Roll<PractitionerCharacterRoller, PractitionerSubType>,
+        [Constants.NewWitchCharacter] = c => NewCharacterCommandHandler.Roll<WitchCharacterRoller, WitchSubType>(c, recorder),
+        [Constants.NewBountyHunterCharacter] = c => NewCharacterCommandHandler.Roll<BountyHunterCharacterRoller, BountyHunterSubType>(c, recorder),
+        [Constants.NewMercenaryCharacter] = c => NewCharacterCommandHandler.Roll<MercenaryCharacterRoller, MercenarySubType>(c, recorder),
+        [Constants.NewOpportunistCharacter] = c => NewCharacterCommandHandler.Roll<OpportunistCharacterRoller, OpportunistSubType>(c, recorder),
+        [Constants.NewPractitionerCharacter] = c => NewCharacterCommandHandler.Roll<PractitionerCharacterRoller, PractitionerSubType>(c, recorder),
     };
 
-    public async Task Start()
+    public async Task StartAsync(CancellationToken cancellationToken)
     {
-        await _client.LoginAsync(TokenType.Bot, token);
-        await _client.StartAsync();
         _client.Ready += ReadyAsync;
         _client.SlashCommandExecuted += CommandHandler;
-        await Task.Delay(-1);
+        await _client.LoginAsync(TokenType.Bot, token);
+        await _client.StartAsync();
+    }
+
+    public async Task StopAsync(CancellationToken cancellationToken)
+    {
+        await _client.LogoutAsync();
+        await _client.StopAsync();
     }
 
     private async Task ReadyAsync()
@@ -123,20 +135,55 @@ public class DiscordCommandHandler(string token)
             new SlashCommandBuilder()
                 .WithName(Constants.HelpOptionName)
                 .WithDescription("Explanation and examples"),
+            new SlashCommandBuilder()
+                .WithName(Constants.StatsOptionName)
+                .WithDescription("View dice roll statistics for this server")
+                .AddOption(new SlashCommandOptionBuilder()
+                    .WithName(Constants.StatsSubDistribution)
+                    .WithDescription("Show value distribution for a die type")
+                    .WithType(ApplicationCommandOptionType.SubCommand)
+                    .AddOption(Constants.StatsDieOptionName, ApplicationCommandOptionType.Integer,
+                        "Die type, e.g. 20", isRequired: true, minValue: 2, maxValue: 100)
+                    .AddOption(Constants.StatsPublicOptionName, ApplicationCommandOptionType.Boolean,
+                        "Show to everyone in the channel (default: only you)", isRequired: false))
+                .AddOption(new SlashCommandOptionBuilder()
+                    .WithName(Constants.StatsSubCrits)
+                    .WithDescription("Show nat 1 / nat 20 rates per user (d20)")
+                    .WithType(ApplicationCommandOptionType.SubCommand)
+                    .AddOption(Constants.StatsPublicOptionName, ApplicationCommandOptionType.Boolean,
+                        "Show to everyone in the channel (default: only you)", isRequired: false))
+                .AddOption(new SlashCommandOptionBuilder()
+                    .WithName(Constants.StatsSubTop)
+                    .WithDescription("Show roll counts per user")
+                    .WithType(ApplicationCommandOptionType.SubCommand)
+                    .AddOption(Constants.StatsPublicOptionName, ApplicationCommandOptionType.Boolean,
+                        "Show to everyone in the channel (default: only you)", isRequired: false))
+                .AddOption(new SlashCommandOptionBuilder()
+                    .WithName(Constants.StatsSubStreaks)
+                    .WithDescription("Show longest hot/cold d20 streaks per user")
+                    .WithType(ApplicationCommandOptionType.SubCommand)
+                    .AddOption(Constants.StatsPublicOptionName, ApplicationCommandOptionType.Boolean,
+                        "Show to everyone in the channel (default: only you)", isRequired: false))
+                .AddOption(new SlashCommandOptionBuilder()
+                    .WithName(Constants.StatsSubHours)
+                    .WithDescription("Show roll activity by hour of day (UTC)")
+                    .WithType(ApplicationCommandOptionType.SubCommand)
+                    .AddOption(Constants.StatsPublicOptionName, ApplicationCommandOptionType.Boolean,
+                        "Show to everyone in the channel (default: only you)", isRequired: false)),
         ];
     }
 
-    private static async Task CommandHandler(SocketSlashCommand command)
+    private async Task CommandHandler(SocketSlashCommand command)
     {
         var commandHandler = command.Data.Name switch
         {
-            var name when CharacterCommandHandlers.TryGetValue(name, out var characterHandler)
+            var name when _characterCommandHandlers.TryGetValue(name, out var characterHandler)
                 => characterHandler(command),
-            var name when EffectCommandHandlers.TryGetValue(name, out var effectHandler)
+            var name when _effectCommandHandlers.TryGetValue(name, out var effectHandler)
                 => effectHandler(command),
-            var name when DiceCommandHanders.TryGetValue(name, out var diceHandler)
+            var name when _diceCommandHanders.TryGetValue(name, out var diceHandler)
                 => diceHandler(command, name == Constants.RollOptionHiddenName),
-            var name when UtilityCommandHandlers.TryGetValue(name, out var utilityHandler)
+            var name when _utilityCommandHandlers.TryGetValue(name, out var utilityHandler)
                 => utilityHandler(command),
             _ => command.RespondAsync(ErrorMessages.FallbackErrorMessage, ephemeral: true),
         };

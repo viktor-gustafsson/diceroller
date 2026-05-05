@@ -16,4 +16,13 @@ public static class Constants
     public const string NewOpportunistCharacter = "new_opportunist_char";
     public const string NewPractitionerCharacter = "new_practitioner_char";
     public const string SubTypeOptionName = "sub_type";
+
+    public const string StatsOptionName = "stats";
+    public const string StatsSubDistribution = "distribution";
+    public const string StatsSubCrits = "crits";
+    public const string StatsSubTop = "top";
+    public const string StatsSubStreaks = "streaks";
+    public const string StatsSubHours = "hours";
+    public const string StatsDieOptionName = "die";
+    public const string StatsPublicOptionName = "public";
 }

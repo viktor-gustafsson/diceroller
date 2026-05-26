@@ -102,10 +102,10 @@ public static class MyStatsCommandHandler
     private static void AppendD20Streaks(StringBuilder sb, IEnumerable<int> d20s)
     {
         var values = d20s.ToList();
-        var hot = LongestRun(values, v => v >= 11);
-        var cold = LongestRun(values, v => v <= 10);
+        var hot = LongestRun(values, v => v >= 12);
+        var cold = LongestRun(values, v => v <= 11);
         sb.AppendLine("🔥 d20 streaks");
-        sb.AppendLine($"  hot (≥11): {hot}  cold (≤10): {cold}");
+        sb.AppendLine($"  hot (≥12): {hot}  cold (≤11): {cold}");
     }
 
     private static void AppendTopDieTypes(StringBuilder sb, IReadOnlyList<(int DieType, int Count)> ordered)

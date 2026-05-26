@@ -190,15 +190,15 @@ public static class StatsCommandHandler
             .Select(g => new
             {
                 UserId = g.Key,
-                Hot = LongestRun(g.Select(x => x.Value), v => v >= 11),
-                Cold = LongestRun(g.Select(x => x.Value), v => v <= 10),
+                Hot = LongestRun(g.Select(x => x.Value), v => v >= 12),
+                Cold = LongestRun(g.Select(x => x.Value), v => v <= 11),
             })
             .OrderByDescending(x => Math.Max(x.Hot, x.Cold))
             .ToList();
 
         var sb = new StringBuilder();
         sb.AppendLine("```");
-        sb.AppendLine("🔥 d20 Streaks — this server (consecutive ≥11 hot, ≤10 cold)");
+        sb.AppendLine("🔥 d20 Streaks — this server (consecutive ≥12 hot, ≤11 cold)");
         sb.AppendLine();
 
         foreach (var u in perUser)
